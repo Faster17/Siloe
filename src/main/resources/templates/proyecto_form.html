@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+</head>
+
+<body>
+    <div th:if="${rol == 1}">
+        <div th:replace="plantilla/template::barra_admin"></div>
+      </div>
+      <div th:if="${rol == 0 || rol == 4}">
+          <div th:replace="plantilla/template::barra"></div>
+      </div>
+      <div th:if="${rol == 2}">
+        <div th:replace="plantilla/template::barra_superadmin"></div>
+      </div>
+      <style>
+        .form-group strong{
+           color: #098ad8;
+        }
+      </style>
+    <header>
+      <div class="container container-proyecto">
+          <div class="row">
+              <div class="col-lg-4 py-5">
+                  <h2 id="titulo" style="color: #ffff !important;" th:if="${proyecto.id == null}"><strong>NUEVO PROYECTO</strong></h2>
+                  <h2 id="titulo-sombra" th:if="${proyecto.id != null}"><strong>EDITAR PROYECTO "[[${proyecto.nombre}]]"</strong></h2>
+                  <form id="proyectoF" class="form-control my-5" th:action="@{${proyecto.id == null ? '/proyectos' : '/proyectos/' + proyecto.id}}"
+                        method="post" enctype="multipart/form-data" style="opacity: 0.8;">
+                      <div class="form-group" style="opacity: 1;">
+                          <label for="nombre" class="my-2"><strong>Nombre:</strong></label>
+                          <input type="text" class="form-control" id="nombre" th:name="nombre" th:value="${proyecto.nombre}" required><br>
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="distrito"><strong>Distrito:</strong></label>
+                          <input type="text" class="form-control" id="distrito" th:name="distrito" th:value="${proyecto.distrito}" required><br>
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="ubicacion"><strong>Ubicación:</strong></label>
+                          <input type="text" class="form-control" id="ubicacion" th:name="ubicacion" th:value="${proyecto.ubicacion}" required><br>
+                      </div>
+  
+                      <div class="form-group">
+                          <label for="descripcion"><strong>Descripción:</strong></label>
+                          <textarea class="form-control" id="descripcion" name="descripcion" rows="5" cols="40"
+                                    th:text="${proyecto.descripcion}" required></textarea><br>
+                      </div>
+                      <div class="form-group">
+                        <label for="imagen1"><strong>Mapa de Lotes:</strong></label>
+                        <input class="form-control" type="file" id="imagen1" name="files"><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagen2"><strong>Tarjeta del Proyecto:</strong></label>
+                        <input class="form-control" type="file" id="imagen2" name="files"><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagen3"><strong>Logo del Proyecto:</strong></label>
+                        <input class="form-control" type="file" id="imagen3" name="files"><br>
+                    </div>
+                    
+                      <input th:if="${proyecto.id != null}" type="hidden" name="_method" value="put"/>
+                      <div class="row align-items-center">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn mt-4" id="boton-enviar"><strong>Guardar Todo</strong></button>
+                              <button type="button" class="btn my-2" id="boton-cerrar"
+                                      onclick="location.href='/proyectos';"><strong>Proyectos</strong></button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <style>
+                #boton-enviar, #boton-agregar{
+                    margin-bottom: 10px;
+                    padding-left: 40px;
+                    padding-right: 40px;
+                    background-color: #098ad8 ;
+                    color: white;
+                    text-align: center;
+                }
+                .mini-form {
+                    padding: 10px;
+                    margin-top: 10px;
+                    position: relative;
+                    }
+
+                .close-btn, .close-exis {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    cursor: pointer;
+                    background-color: #098ad8;
+                    color: white;
+                }
+                .lotes{
+                    max-width: 300px;
+                }
+              </style>
+              <div class="col-lg-8 py-5">
+                <div class="text-center mb-5">
+                    <h2 id="titulo" class="text-white"><strong>LOTES DEL PROYECTO</strong></h2>
+                </div>
+                <div class="form-control" style="opacity: 0.8; border-radius: 10px;">
+                    <div class="text-center">
+                        <br>
+                        <h5 class="my-3"><strong style="color: #098ad8;">SEGMENTACIÓN DE LOTES</strong></h5>
+                        <button class="btn mt-4 mb-4" id="boton-agregar"><strong>Añadir nuevo tipo de Lote</strong></button>
+                    </div>
+                    <div id="formContainer" class="row row-cols-1 row-cols-md-2 m-3">
+                        <!-- Loop para mostrar los tipos de lotes existentes -->
+                        <div th:each="tipoLote, tipoLoteStat : ${proyecto.tiposLotes}">
+                            <div class="mini-form">
+                                <div class="mb-2">
+                                    <span style="font-size: 20px;color: #098ad8;" class="mx-1" th:text="${tipoLoteStat.index + 1}"></span>
+                                </div>
+                                <div class="form-group lotes">
+                                    <label for="tamanio" class="mx-1 mt-2"><strong>Tamaño:</strong></label>
+                                    <input type="text" class="form-control mt-2" id="tamanio" th:value="${tipoLote.tamano}" required>
+                                </div>
+                                <div class="form-group lotes">
+                                    <label for="precio" class="mx-1 mt-2"><strong>Precio:</strong></label>
+                                    <input type="text" class="form-control mt-2" id="precio" th:value="${tipoLote.precio}" required>
+                                </div>
+                                <div class="form-group lotes">
+                                    <label for="inicial" class="mx-1 mt-2"><strong>Lote Inicial:</strong></label>
+                                    <input type="number" class="form-control mt-2 inicio" id="inicial" th:value="${tipoLote.loteInicial}" min="0" required>
+                                </div>
+                                <div class="form-group lotes">
+                                    <label for="final" class="mx-1 mt-2"><strong>Lote Final:</strong></label>
+                                    <input type="number" class="form-control mt-2 fin" id="final" th:value="${tipoLote.loteFinal}" min="0">
+                                </div>
+                                <form action="#" th:action="@{/proyectos/{id}/eliminarTipoLote/{tipoLoteId}(id=${proyecto.id}, tipoLoteId=${tipoLote.id})}" method="post">
+                                    <button type="submit" class="btn close-exis" onclick="return confirm('¿Estás seguro de que deseas eliminar este tipo de lote?')">X</button>
+                                </form>                                
+                            </div>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script>
+    document.getElementById("boton-enviar").addEventListener("click", function(event) {
+    event.preventDefault();
+
+    var proyectoF = document.getElementById("proyectoF");
+    var miniForms = document.querySelectorAll(".mini-form");
+
+    if (miniForms.length === 0) {
+        alert("Por favor, añade al menos un tipo de lote.");
+        return;
+    }
+    var isValidProyectoF = true;
+    for (var i = 0; i < proyectoF.length; i++) {
+        if (proyectoF[i].hasAttribute("required") && !proyectoF[i].value) {
+            isValidProyectoF = false;
+            break;
+        }
+    }
+    var isValidMiniForms = true;
+    for (var i = 0; i < miniForms.length; i++) {
+        var inputs = miniForms[i].querySelectorAll("input");
+        for (var j = 0; j < inputs.length; j++) {
+            if (inputs[j].hasAttribute("required") && !inputs[j].value) {
+                isValidMiniForms = false;
+                break;
+            }
+        }
+        if (!isValidMiniForms) {
+            break;
+        }
+    }
+
+    var isInvalidRanges = false;
+    for (var i = 0; i < miniForms.length; i++) {
+        var loteInicial1 = parseInt(miniForms[i].querySelector("#inicial").value);
+        var loteFinal1 = parseInt(miniForms[i].querySelector("#final").value);
+        if (loteFinal1 <= loteInicial1) {
+            isInvalidRanges = true;
+            break;
+        }
+        for (var j = i + 1; j < miniForms.length; j++) {
+            var loteInicial2 = parseInt(miniForms[j].querySelector("#inicial").value);
+            var loteFinal2 = parseInt(miniForms[j].querySelector("#final").value);
+            if (loteInicial1 <= loteFinal2 && loteInicial2 <= loteFinal1) {
+                isInvalidRanges = true;
+                break;
+            }
+        }
+        if (isInvalidRanges) {
+            break;
+        }
+    }
+
+    if (isValidProyectoF && isValidMiniForms && !isInvalidRanges) {
+        for (var i = 0; i < miniForms.length; i++) {
+            var inputs = miniForms[i].querySelectorAll("input");
+            for (var j = 0; j < inputs.length; j++) {
+                var inputName = inputs[j].getAttribute("id") + "_" + (i + 1);
+                var inputValue = inputs[j].value;
+
+                var hiddenInput = document.createElement("input");
+                hiddenInput.setAttribute("type", "hidden");
+                hiddenInput.setAttribute("name", inputName);
+                hiddenInput.setAttribute("value", inputValue);
+                proyectoF.appendChild(hiddenInput);
+            }
+        }
+        proyectoF.submit();
+    } else if (isInvalidRanges) {
+        alert("Asegúrese que los rangos de la segmentación de Lotes sean válidos");
+    } else {
+        alert("Por favor completa todos los campos y al menos una segmentación de Lotes");
+    }
+});
+
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var editMode = /*[[${editMode}]]*/ false;
+</script>
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+    const agregarBtn = document.getElementById("boton-agregar");
+    const enviarBtn = document.getElementById("boton-enviar");
+    const formContainer = document.getElementById("formContainer");
+    let forms = [];
+    
+    function updateFormCounter() {
+        forms.forEach((form, index) => {
+            const title = form.querySelector(".mx-1");
+            if (title) {
+                title.innerHTML = `<strong style="color: #098ad8;">Segmento ${index + 1}</strong>`;
+            }
+        });
+    }
+
+    function createForm(isDefault = false) {
+        if (!editMode && isDefault) {
+            return;
+        }
+
+        const miniForm = document.createElement("div");
+        miniForm.classList.add("mini-form");
+        const formIndex = forms.length + 1;
+        miniForm.innerHTML = `
+            ${isDefault && !editMode ? '' : '<button class="btn close-btn">&times;</button>'}
+            <div class="mb-2">
+                <span style="font-size: 20px;" class="mx-1"><strong>Segmento ${formIndex}</strong></span>
+            </div>
+            <div class="form-group lotes" style="opacity: 1;">
+                <label for="tamanio" class="mx-1 mt-2"><strong>Tamaño:</strong></label>
+                <input type="number" class="form-control mt-2" id="tamanio" required>
+            </div>
+            <div class="form-group lotes">
+                <label for="precio" class="mx-1 mt-2"><strong>Precio:</strong></label>
+                <input type="number" step="any" inputmode="numeric" class="form-control mt-2" id="precio" required>
+            </div>
+            <div class="form-group lotes">
+                <label for="inicial" class="mx-1 mt-2"><strong>Lote Inicial:</strong></label>
+                <input type="number" class="form-control mt-2 inicio" id="inicial" min="0" required>
+            </div>
+            <div class="form-group lotes">
+                <label for="final" class="mx-1 mt-2"><strong>Lote Final:</strong></label>
+                <input type="number" class="form-control mt-2 fin" id="final" min="0" required>
+            </div>
+            <style>
+                /* Elimina las flechas de incremento y decremento */
+                input[type="number"]::-webkit-inner-spin-button,
+                input[type="number"]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                /* Evita que los estilos del navegador se apliquen al campo */
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+            </style>
+        `;
+
+        formContainer.appendChild(miniForm);
+        forms.push(miniForm);
+        updateFormCounter();
+
+        const closeBtn = miniForm.querySelector(".close-btn");
+            closeBtn.addEventListener("click", function() {
+                formContainer.removeChild(miniForm);
+                forms.splice(forms.indexOf(miniForm), 1);
+                updateFormCounter();
+            });
+    }
+
+    const tiposLotes = document.querySelectorAll(".mini-form");
+    tiposLotes.forEach((tipoLote, index) => {
+        const formIndex = index + 1;
+        const title = tipoLote.querySelector(".mx-1");
+        if (title) {
+            title.innerHTML = `<strong>Tipo ${formIndex}</strong>`;
+        }
+        forms.push(tipoLote);
+    });
+    
+
+    if (!editMode) {
+        createForm(true);
+    }
+
+    agregarBtn.addEventListener("click", function() {
+        createForm();
+    });
+
+    enviarBtn.addEventListener("click", function() {
+        // Lógica para enviar el formulario
+    });
+    
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+</script>
+</html>
+
+
+

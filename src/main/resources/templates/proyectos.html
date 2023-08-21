@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+</head>
+<body>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  
+  
+  <style>
+    .row-centered {
+      display: flex;
+      justify-content: center;
+      background-image: url('/images/background6.png');
+      background-size: cover;
+      margin-top: 7px;
+      height: 692px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+    text-align: center;
+    }
+  
+    .row-flex {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 50px;
+      background-image: url('/images/background6.png');
+      background-size: cover;
+      width: 100.63%;
+      
+    }
+    .col-card {
+      width: calc(33.3333% - 15px);
+      margin-top: 30px;
+      margin-bottom: 80px;
+      width: 500px;
+      margin-left: 20px;
+      margin-right: 20px;
+      
+    }
+    .card-body{
+        height: 560px;
+    }
+    .card-body img{
+        height: 100%;
+    }
+    .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.overlay-image {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.overlay-buttons .btn {
+    color: white;
+}
+
+    .col-card:hover .overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #boton-nuevo{
+      padding-left: 40px;
+      padding-right: 40px;
+      background-color: #098ad8 ;
+      color: white;
+      text-align: center;
+    }
+  </style>
+  <div th:if="${not #lists.isEmpty(proyectos)}" class="row row-flex">
+    <div style="text-align: center;">
+      <h1 id="titulo-sombra" style="margin-top: 100px;"><strong>PROYECTOS</strong></h1>
+      <a th:if="${rol == 1 || rol ==2}" href="/proyectos/new" class="btn my-3" id="boton-nuevo">Nuevo Proyecto</a>
+    </div>
+    <div th:each="proyecto : ${proyectos}" class="col-card col-lg-4 col-md-6 col-sm-12">
+        <div class="card" style="border-radius: 20px; border: 2px black;">
+            <div class="card-body py-0 px-0">
+              <img th:if="${not #lists.isEmpty(proyecto.imagenes)}" th:src="@{'/images/' + ${proyecto.imagenes[1].fileName}}" class="card-img-top" style="border-radius: 20px;">
+            </div>
+            <div class="overlay">
+              <a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+                  <div class="overlay-image">
+                      <img th:if="${not #lists.isEmpty(proyecto.imagenes)}" th:src="@{'/images/' + ${proyecto.imagenes[2].fileName}}" style="width: 300px;">
+                  </div>
+                  <div class="overlay-buttons mt-5">
+                      <a th:if="${rol == 1 || rol == 2}" th:href="@{/proyectos/{id}(id=${proyecto.id})}" class="btn btn-primary">Ver</a>
+                      <a th:if="${rol == 1 || rol == 2}" th:href="@{/proyectos/{id}/edit(id=${proyecto.id})}" class="btn btn-secondary">Editar</a>
+                      <form th:if="${rol == 1 || rol == 2}" th:action="@{/proyectos/{id}/delete(id=${proyecto.id})}" method="post"
+                          onsubmit="return confirm('¿Estás seguro de que deseas eliminar este proyecto?');">
+                          <button th:if="${rol == 1 || rol == 2}" type="submit" class="btn btn-danger">Eliminar</button>
+                      </form>
+                  </div>
+              </a>
+          </div>          
+        </div>
+    </div>
+</div>
+<div th:if="${#lists.isEmpty(proyectos)}" class="row-centered">
+  <div class="header">
+      <h1 id="titulo-sombra" style="margin-top: 100px;"><strong>PROYECTOS</strong></h1>
+      <a th:if="${rol == 1 || rol == 2}" href="/proyectos/new" class="btn my-3" id="boton-nuevo">Nuevo Proyecto</a>
+  </div>
+  <div class="col-card text-center" style="margin-bottom: 200px; margin-top: 100px;">
+      <h2 id="titulo-sombra">No hay proyectos disponibles</h2>
+  </div>
+</div>
+<footer th:replace="plantilla/template::footer"></footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>
+

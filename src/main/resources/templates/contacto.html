@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+</head>
+<body>
+
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+  body {
+    background: linear-gradient(to right, #098ad8, #ffffff, #ffffff, #ffffff, #098ad8);
+    color: #fff;
+    font-family: sans-serif;
+
+}
+
+
+.titulo {
+    text-align: center;
+    font-size: 3em;
+    color: #098ad8; 
+}
+
+.contactos-form {
+    background: #393838;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.9);
+}
+
+.contactos-form form {
+    display: grid;
+
+
+}
+
+.contactos-form form label {
+    display: block;
+}
+
+.contactos-form form p {
+    margin: 0;
+    padding: 1em;
+}
+
+.contactos-form form .block {
+    grid-column: 1 / 3;
+}
+
+.contactos-form form button,
+.contactos-form form input,
+.contactos-form form textarea {
+    width: 100%;
+    padding: .6em;
+    border: none;
+    background: none;
+    outline: 0;
+    color: #fff;
+    border-bottom: 1px solid #098ad8;;
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.513);
+}
+.contactos-form form button {
+    background: #098ad8;
+    border: 0;
+    text-transform: uppercase;
+    padding: 1em;
+}
+
+.contactos-form form button:hover,
+.contactos-form form button:focus {
+    background: #098ad8;
+    color: #fff;
+    transition: background-color 1s ease-out;
+    outline: 0;
+}
+
+
+.info {
+    background: #6c6b6b;
+}
+
+.info h4,
+.info ul,
+.info p {
+    text-align: center;
+    margin: 0 0 1rem 0;
+}
+
+@media(min-width: 700px) {
+
+    .contactos {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        padding: 0 4em;
+
+    }
+
+    .contactos>* {
+        padding: 2em;
+
+    }
+
+    .info h4,
+    .info ul,
+    .info p {
+        text-align: left;
+    }
+}
+
+</style>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="content">
+
+    <h1 class="titulo mt-5"><strong>¿Quieres Trabajar con Nosotros?</strong></h1>
+    <br>
+    <br>
+
+    <div class="contactos">
+        <div class="contactos-form px-4">
+            <h3 class="pt-5">Contacto</h3>
+            <br>
+            <form action="envio.php" method="POST">
+                <p>
+                    <label><i class="bi bi-person-fill"></i> Nombres</label>
+                    <input type="text" name="nombres" placeholder="Tu Nombre" required>
+                </p>
+                <p>
+                    <label><i class="bi bi-person-fill"></i> Apellidos</label>
+                    <input type="text" name="apellidos" placeholder="Tus Apellidos" required>
+
+                </p>
+                <p>
+                    <label><i class="bi bi-telephone-fill"></i> Teléfono</label>
+                    <input type="text" name="telefono" placeholder="999 999 999" required>
+                </p>
+                <p>
+                    <label><i class="bi bi-envelope-at-fill"></i> Correo Electrónico</label>
+                    <input type="email" name="email" placeholder="tucorreo@gmail.com" required>
+                </p>
+                <p class="block">
+                    <label><i class="bi bi-envelope-fill"></i> Mensaje</label>
+                    <textarea name="mensaje" rows="3" placeholder="Déjano tu mensaje ..."></textarea>
+                </p>
+                <p class="block">
+                    <button type="submit">
+                        Enviar
+                    </button>
+                </p>
+            </form>
+        </div>
+        <div class="info mx-auto py-5 my-5">
+          <div class="my-5 mx-2 mt-5">
+            <h4>Más Informacion</h4>
+            <ul style="list-style: none; padding: 0;">
+                <li><i class="fas fa-map-marker-alt"></i>&nbsp; Chiclayo - Perú</li>
+                <li><i class="fas fa-phone"></i>&nbsp; 999 999 999</li>
+                <li><i class="fas fa-envelope-open-text"></i>&nbsp; ch76573236@gmail.com</li>
+            </ul>
+            <p>Si necesitas contactarnos para hacer alguna consulta o simplemente para dejar tu comentario, por
+                favor sientete libre de hacerlo. Respondemos en horario laboral (GMT -5) (Lima, Perú).
+            </p>
+            <p>&copy; 2023 Política de privacidad </p>
+          </div>
+            
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+<br>
+
+<div class="text-center">
+    <h2 style="text-align: center;color: #098ad8;"><strong>ESTAMOS UBICADOS EN</strong> </h2>
+    <br>
+    <iframe class="my-0" src="https://maps.google.com/maps?width=100%25&amp;height=1000&amp;hl=en&amp;q=Atahualpa%201041,%20Reque%2014801+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" width="100%" height="600" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+</div>
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>
+

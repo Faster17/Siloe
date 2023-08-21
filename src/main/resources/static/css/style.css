@@ -1,0 +1,135 @@
+#logo{
+    height: 80px;
+    margin-left: 5px;
+}
+#enlace{
+  list-style: none;
+  text-decoration: none;
+  color: white;
+}
+/*  */
+header{
+  background: url(/images/background6.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.nav-item{
+    padding: 10px;
+    font-size: large;
+}
+.dropdown-item:hover {
+  color: #098ad8 ;
+}
+/* Estilo de recuperar */
+.banner-recuperar{
+  height: 594px;
+  background: url(/images/background6.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+/* Estilos Perfil */
+.banner-perfil{
+  min-height: 594px;
+}
+.form-control{
+  width: 200px;
+}
+.content-opacity-100 {
+  opacity: 1;
+}
+
+#boton-cerrar{
+  margin-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #098ad8 ;
+  color: white;
+  text-align: center;
+}
+/* Estilos del formulario Registrarse */
+.container-banner{
+  margin-top: 105px;
+}
+#titulo-sombra{
+  color: white;
+  text-shadow: 0px 5px 2px rgba(0, 0, 0, 1);
+}
+/* Espacio en blanco de home */
+main{
+  min-height: 100vh;
+}
+/* Margen del formulario iniciar sesion */
+.contenido{
+  margin-top: 120px;
+  margin-bottom: -21px;
+}
+
+.notification-bar {
+  background-color: #f8f8f8;
+  color: #333;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Estilo de Proyectos */
+#proyectos{
+  margin-top: 148px;
+  min-height: 61vh;
+  margin-bottom: 4px;
+}
+.container-proyecto{
+  margin-top: 87px;
+}
+#imagen{
+  width: 474px;
+  height: 502px;
+  border-color: #098ad8 ;
+  border-width: 5px;
+  border-radius: 20px;
+}
+
+.banner-proyectos{
+  height: 834px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+}
+
+.overlay-content img{
+  width: 360px;
+  height: auto;
+}
+
+.banner-rol{
+  height: 594px;
+  background: url(/images/background6.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Estilos para cada proyecto */
+body{
+  min-height: 70vh;
+}

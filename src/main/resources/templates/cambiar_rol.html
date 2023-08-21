@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+    @media screen and (max-width: 991px) {
+    .banner-rol {
+        height: 994px;
+    }
+    .form-control {
+        margin-left: 0;
+    }
+    #contenido{
+        width: 100%;
+    }
+    }
+  </style>
+  <header class="banner-rol">
+    <div class="container container-banner text-white" style="font-size: 20px;">
+        <div class="row justify-content-center align-items-center" style="min-height: 50vh; margin: 10px;">
+            <div class="col-lg-6 mb-4 mt-5">
+                <h2 id="titulo"><strong>BUSCAR USUARIO</strong></h2>
+                <form class="mt-5" method="post" th:action="@{/cambiar-rol}">
+                    <label for="correo"><strong>Correo del Usuario:</strong></label><br><br>
+                    <input class="form-control" type="email" style="width: 90%;" id="correo" name="correo" required th:value="${correo}"><br>
+                    <button id="boton-cerrar" class="btn" type="submit"><strong>Buscar Usuario</strong></button>
+                    <br>
+                    <p th:if="${mensaje}"><strong><span th:text="${mensaje}"></span></strong></p>
+                </form>
+            </div>
+            <div class="col-lg-6 mb-4 mt-5" style="font-size: 15px;">
+                <div id="contenido" class="card" style="background-color: rgba(255, 255, 255, 0.798); margin-top: 50px;">
+                    <div class="card-body mx-5">
+                        <h3 class="card-title" style="color: #098ad8; font-weight: bold; text-align: center; margin: 20px;">Cambiar Rol de Usuario</h3>
+                        <div class="mt-4" style="color: #098ad8; font-size: 20px;">
+                            <p><strong>Correo: </strong> <span class="ms-3" th:text="${usuario?.correo}"></span></p>
+                            <p><strong>Nombre: </strong> <span class="ms-3" th:text="${usuario?.nombres}"></span></p>
+                            <p><strong>Apellidos: </strong> <span class="ms-3" th:text="${usuario?.apellidos}"></span></p>
+                            <p><strong>Teléfono: </strong> <span class="ms-3" th:text="${usuario?.telefono}"></span></p>
+                            <form method="post" th:action="@{/procesar}">
+                                <input type="hidden" name="correo" th:value="${usuario?.correo}">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label for="rol"><strong>Rol:</strong></label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" style="width: 200px;" id="rol" name="rol" th:disabled="${rol != 2}">
+                                            <option value="0" th:selected="${usuario?.rol == 0}" th:disabled="${usuario?.rol == 2}">Usuario</option>
+                                            <option value="1" th:selected="${usuario?.rol == 1}" th:disabled="${usuario?.rol == 2}">Admin</option>
+                                            <option value="2" th:selected="${usuario?.rol == 2}" th:disabled="${rol == 2}">Superadmin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button id="boton-cerrar" class="btn" type="submit" th:disabled="${usuario?.rol == 2}">Procesar</button>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <strong><span th:if="${usuario?.rol == 2}">No se puede modificar al SuperAdmin</span></strong>
+                                    <strong><span th:text="${mensajeExito}"></span></strong>
+                                    <strong><span th:text="${mensajeError}"></span></strong>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>                  
+        </div>            
+    </div>
+    
+  </header>
+    <footer th:replace="plantilla/template::footer"></footer>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>
+
+
+
+
+
+

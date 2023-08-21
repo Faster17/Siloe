@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<div th:if="${rol == 1}">
+  <div th:replace="plantilla/template::barra_admin"></div>
+</div>
+<div th:if="${rol == 0 || rol == 4}">
+    <div th:replace="plantilla/template::barra"></div>
+</div>
+<div th:if="${rol == 2}">
+  <div th:replace="plantilla/template::barra_superadmin"></div>
+</div>
+
+<body>
+  <style>
+    #services{
+      max-width: 140px;
+      min-height: 190px;
+      height: auto;
+    }
+    #titulo{
+    font-weight: bold;
+    color: #098ad8 ;
+  }
+  body{
+    background: linear-gradient(to right, #098ad8, #ffffff, #ffffff, #ffffff, #098ad8);
+  }
+  .lot-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.index-label {
+    margin: 0;
+}
+.lot-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tipo-lote-title {
+    text-align: start;
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.lote {
+    text-align: center;
+    margin: 1px;
+    width: 45px;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: #ffff;
+    color: #098ad8;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.vend {
+    text-align: center;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: #30bb57;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.disp {
+    text-align: center;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: #ffff;
+    color: #098ad8;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.separ {
+    text-align: center;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: red;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.selec {
+    text-align: center;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: #5e5b5b;
+    color: #ffff;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.vendido {
+    background-color: #30bb57;
+    color: white;
+}
+.selected{
+  background-color: #5e5b5b !important;
+  color: white;
+}
+
+.separated {
+    background-color: red;
+    color: white;
+}
+
+.centered-card {
+        margin: 0 auto;
+    }
+    .separar{
+      background-color: #098ad8;
+      color: #ffff;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    .editar{
+      background-color: #098ad8;
+      color: #ffff;
+    }
+    .mini-titulos{
+      color: #098ad8;
+    }
+    .selected.vendido {
+    background-color: #207b3a !important;
+    color: white;
+}
+.selected.separated {
+    background-color: rgb(178, 38, 38) !important;
+    color: white;
+}
+  </style>
+  <div class="contenido_proyecto mb-5">
+    <div class="container content-proyecto">
+      <div class="col-12">
+        <img th:if="${not #lists.isEmpty(proyecto.imagenes)}" th:src="@{'/images/' + ${proyecto.imagenes[0].fileName}}" alt="" style="width: 100%; height: 100%; margin-top: 190px;">
+      </div>
+      <h1 style="font-size: 50px;" id="titulo" class="mt-5 text-center" th:text="${proyecto.nombre}">Título Principal</h1>
+      <p class="text-center mt-3" style="font-size: 23px;" th:text="${proyecto.descripcion}">Descripcion</p>
+      <div class="row">
+          <div class="col-md-6 my-3">
+            <div class="row mt-3 mb-4">
+              <div class="col-7">
+                <span id="titulo" style="font-size: 20px;"><strong>Separa con:</strong></span><br>
+                <img style="width: 30px;" src="/images/money.png" alt=""> &nbsp;Efectivo
+                <img style="width: 30px; margin-left: 20px;" src="/images/card.png" alt=""> &nbsp;Transferencia <br>
+                <img style="width: 30px;" src="/images/yape.png" alt=""> &nbsp;Yape <br>
+              </div>
+              <div class="col-4 me-2">
+                <span id="titulo" style="font-size: 20px;"><strong>Lotes:</strong></span>
+                <p class="text-start" style="font-size: 19px;" id="menorTamano"></p>
+              </div>
+              <div class="tipo-lote" th:each="tipoLote, tipoLoteStat : ${proyecto.tiposLotes}">
+                <div class="tamano" th:data-tamano="${tipoLote.tamano}" style="display: none;"></div>
+              </div>
+              <script>
+              document.addEventListener("DOMContentLoaded", function() {
+              const tipoLoteElements = document.querySelectorAll(".tipo-lote");
+          
+              let menorTamano = Infinity;
+          
+              tipoLoteElements.forEach(tipoLote => {
+                  const tamano = parseFloat(tipoLote.querySelector(".tamano").getAttribute("data-tamano"));
+                  if (tamano < menorTamano) {
+                      menorTamano = tamano;
+                  }
+              });
+              const menorTamanoSpan = document.getElementById("menorTamano");
+              menorTamanoSpan.textContent = `Desde ${menorTamano} m²`;
+            });
+            </script>
+            </div>
+            <div class="row mt-3 mb-4">
+                <div class="col-2">
+                  <img src="/images/ubicacion.png" alt="" style="max-width: 100px;">
+                </div>
+                <div class="col-2 ms-4">
+                  <span id="titulo" style="font-size: 20px;"><strong>Distrito</strong></span>
+                  <p th:text="${proyecto.distrito}" style="font-size: 19px;">Distrito</p>
+                </div>
+              <div class="col-2">
+                <img src="/images/ubicacion.png" alt="" width="100">
+              </div>
+              <div class="col-4 ms-4">
+                <span id="titulo" style="font-size: 20px;"><strong>Ubicación</strong></span>
+                <p th:text="${proyecto.ubicacion}" style="font-size: 19px;">Ubicación</p>
+              </div>
+            </div>
+            <h2 id="titulo" class="text-start">¡Todo lo que necesitas!</h2>
+            <div class="text-center">
+              <img src="/images/e.jpg" alt="Imagen de ejemplo" class="border border-primary rounded img-fluid my-4 me-3" id="services">
+              <img src="/images/s.jpg" alt="Imagen de ejemplo" class="border border-primary rounded img-fluid my-4 me-3" id="services" >
+              <img src="/images/r.jpg" alt="Imagen de ejemplo" class="border border-primary rounded img-fluid my-4 me-3" id="services">
+              <br>
+              <img src="/images/p.jpg" alt="Imagen de ejemplo" class="border border-primary rounded img-fluid my-4 me-3" id="services">
+              <img src="/images/d.jpg" alt="Imagen de ejemplo" class="border border-primary rounded img-fluid my-4 me-3" id="services">
+            </div>
+        </div>
+        <div class="col-md-6 my-3">
+          <div class="card mt-3" style="background-color: #098ad8;">
+            <div class="mt-4">
+                <h2 class="card-title text-center text-white"><strong>Lotes</strong></h2>
+            </div>
+            <div class="card-body text-center">
+                <div class="disp mx-2">
+                  <span class="m-2">Disponible</span>
+                </div>
+                <div class="separ mx-2">
+                  <span class="m-2">Separado</span>
+                </div>
+                <div class="vend mx-2">
+                  <span class="m-2">Vendido</span>
+                </div>
+                <div class="selec mx-2">
+                  <span class="m-2">Seleccionado</span>
+                </div>
+            </div>
+          <div class="lot-container mx-5 mt-2">
+            <div th:each="tipoLote, tipoLoteStat : ${proyecto.tiposLotes}">
+                <div class="tipo-lote mb-2">
+                    <h3 class="tipo-lote-title text-white">Segmento [[${tipoLoteStat.count}]]</h3>
+                    <div th:each="lote : ${tipoLote.lotes}" class="lote" th:classappend="${lote.estado == 'Vendido' ? 'vendido' : (lote.estado == 'Separado' ? 'separated' :'')}">    
+                        <p class="index-label" th:text="${lote.indice}"></p>
+                        <span class="id" th:text="${lote.id}" style="display: none;"></span>
+                        <span class="indice" th:text="${lote.indice}" style="display: none;"></span>
+                        <span class="estado" th:text="${lote.estado}" style="display: none;"></span>
+                        <span class="tamano" th:text="${tipoLote.tamano}" style="display: none;"></span>
+                        <span class="precio" th:text="${tipoLote.precio}" style="display: none;"></span>
+                        
+                        <span class="rol" th:text="${rol}" style="display: none;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3 centered-card mb-5" style="min-width: 300px;">
+            <h4 class="text-center mt-3" style="color: #098ad8;"><strong>Detalles del Lote</strong></h4>
+            <div class="card-body mx-5" id="detalleLote">
+                <p class="text-start "><span class="mini-titulos"><strong>Indice:</strong></span>&nbsp;<span id="indice">&nbsp; _ _ _ _ _ _</span></p>
+                <p class="text-start"><span class="mini-titulos"><strong>Tamaño:</strong></span>&nbsp;<span id="tamano">&nbsp; _ _ _ _ _ _</span> m²</p>
+                <p class="text-start"><span class="mini-titulos"><strong>Precio:</strong></span>&nbsp;<span id="precio">&nbsp; _ _ _ _ _ _</span> nuevos soles</p>
+                <p th:if="${rol == 1 || rol == 2}" class="text-start"><span class="mini-titulos"><strong>Estado:</strong></span>&nbsp; 
+                  <div th:if="${rol == 1 || rol == 2}" class="d-flex">
+                    <select class="form-select" name="" id="estado">
+                      <option value="Separado">
+                        Separado
+                      </option>
+                      <option value="Vendido">
+                        Vendido
+                      </option>
+                      <option value="Disponible">
+                        Disponible
+                      </option>
+                  </select>
+                <button class="btn mx-3 btn-outline-dark border-0 px-2 editar"><i class="bi bi-pencil"></i></button>
+                </div></p>
+                <input type="hidden" id="loteId" value="">
+                <input type="hidden" id="idEnviar" value="">
+                <script>
+                  document.addEventListener("DOMContentLoaded", function() {
+                  const editarButton = document.querySelector(".editar");
+                  const estadoElement = document.getElementById("estado");
+                  const loteIdElement = document.getElementById("idEnviar");
+                  
+                  editarButton.addEventListener("click", function() {
+                      const estado = estadoElement.value;
+                      const id = loteIdElement.value;
+                      var xhr = new XMLHttpRequest();
+                      if(id!=0){
+                        xhr.open("POST", `/proyectos/actualizar-estado-lote?loteId=${id}&estado=${estado}`, true);
+                      xhr.onreadystatechange = function() {
+                          if (xhr.readyState === 4 && xhr.status === 200) {
+                            location.reload();
+                          }
+                      };
+                      xhr.send();
+                      }
+                  });
+              });
+                </script>
+                <span id="estado" style="display: none;"></span>
+                <div class="text-center">
+                  <button id="separarButton" class="btn btn-outline-dark border-0 my-2 separar" data-rol="${rol}"><strong>Separar</strong></button>
+                </div>
+            </div>
+        </div>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loteElements = document.querySelectorAll(".lote");
+            const indiceElement = document.getElementById("indice");
+            const tamanoElement = document.getElementById("tamano");
+            const precioElement = document.getElementById("precio");
+            const estadoElement = document.getElementById("estado");
+            const loteIdElement = document.getElementById("idEnviar");
+            loteElements.forEach(lote => {
+                lote.addEventListener("click", function() {
+                    const selectedLote = document.querySelector(".lote.selected");
+                    if (selectedLote) {
+                        selectedLote.classList.remove("selected");
+                    }
+                    this.classList.add("selected");
+                    const estadoValue = this.querySelector(".estado").textContent;
+                    if (estadoValue === "Separado") {
+                        separarButton.disabled = true;
+                    } else if (estadoValue === "Vendido") {
+                        separarButton.disabled = true;
+                      } else if (estadoValue === "Espera") {
+                        separarButton.disabled = true;
+                    } else {
+                        separarButton.disabled = false;
+                    }
+                    const indice = this.querySelector(".indice").textContent;
+                    const tamano = this.querySelector(".tamano").textContent;
+                    const estado = this.querySelector(".estado").textContent;
+                    estadoElement.value = estado;
+                    const idLote = this.querySelector(".id").textContent;
+                    loteIdElement.value = idLote;
+                    const precioSinFormato = parseFloat(this.querySelector(".precio").textContent);
+                    const precioFormateado = precioSinFormato.toLocaleString("es-PE", {
+                        style: "currency",
+                        currency: "PEN",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    indiceElement.textContent = indice;
+                    tamanoElement.textContent = tamano;
+                    precioElement.textContent = precioFormateado;
+                    document.getElementById("detalleLote").style.display = "block";
+                });
+            });
+    });
+</script>
+<div id="rolValue" style="display: none;" th:text="${rol}"></div>
+
+<style>
+  .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+  }
+  .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 20%;
+      text-align: center;
+  }
+  .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 0;
+      right: 3%;
+      cursor: pointer;
+  }
+  .close:hover,
+  .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+  }
+  .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #098ad8;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+</style>
+</head>
+<div id="modalSeparar" class="modal">
+  <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <p class="mx-5">Inicia sesión para separar un lote o regístrate si no tienes una cuenta.</p>
+      <button class="button mx-5" onclick="location.href='/inicio-sesion'">Iniciar Sesión</button>
+      <button class="button mx-5" onclick="location.href='/registro'">Registrarse</button>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const separarButton = document.getElementById("separarButton");
+      const modalSeparar = document.getElementById("modalSeparar");
+      const closeModalButton = document.getElementById("closeModal");
+      const rolValue = document.getElementById("rolValue").textContent;
+
+      const loteElements = document.querySelectorAll(".lote");
+      loteElements.forEach(lote => {
+          lote.addEventListener("click", function() {
+              separarButton.dataset.loteId = this.querySelector(".id").textContent;
+          });
+      });
+
+      separarButton.addEventListener("click", function() {
+      const loteId = this.dataset.loteId;
+      if (rolValue === "4") {
+          modalSeparar.style.display = "block";
+      } else if (loteId && loteId !== 0) {
+          window.location.href = `/lotes/separar?idLote=${loteId}`;
+      }
+  });
+
+
+      closeModalButton.addEventListener("click", function() {
+          modalSeparar.style.display = "none";
+      });
+  });
+</script>
+
+      </div>
+      </div>
+  </div>
+  </div>
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

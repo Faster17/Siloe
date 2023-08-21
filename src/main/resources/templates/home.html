@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+  body{
+    overflow-x: hidden;
+    background: linear-gradient(to right, #098ad8, #ffffff, #ffffff, #ffffff, #098ad8);
+  }
+  .row-centered {
+        display: flex;
+        justify-content: center;
+        margin-top: 7px;
+        height: 692px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .header {
+      text-align: center;
+      }
+    
+      .row-flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background: linear-gradient(to right, #098ad8, #ffffff, #ffffff, #ffffff, #098ad8);
+        width: 100.63%;
+        
+      }
+      .col-card {
+        width: calc(33.3333% - 15px);
+        margin-top: 50px;
+        margin-bottom: 50px;
+        width: 500px;
+        margin-left: 20px;
+        margin-right: 20px;
+        
+      }
+      #card-proyectos{
+          height: 560px;
+      }
+      .card-body img{
+          height: 100%;
+      }
+  
+  .overlay-image {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .overlay-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+  }
+  
+  .overlay-buttons .btn {
+      color: white;
+  }
+  
+      .col-card:hover .overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #boton-nuevo{
+        padding-left: 40px;
+        padding-right: 40px;
+        background-color: #098ad8 ;
+        color: white;
+        text-align: center;
+      }
+      #nosotros{
+    margin-top: 100px;
+    background: url(/images/banner.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 600px;
+    width: 100%;
+    margin-bottom: 100px;
+    
+  }
+  .overlay-events {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: none;
+  border-radius: 5px;
+}
+
+.card:hover .overlay-events {
+  display: flex;
+}
+  .galeria img{
+    width: 415px;
+    height: 270px;
+    display: block;
+    margin: auto;
+  }
+  #bloque{
+    margin-bottom: 50px;
+  }
+  body{
+    background: linear-gradient(to right, #098ad8, #ffffff, #ffffff, #ffffff, #098ad8);
+  }
+  #personal {
+    height: 575px;
+    max-width: 300px;
+    background-color: #098ad8 ;
+    border-radius: 20px;
+    text-align: center;
+    margin: 10px auto;
+  }
+
+  #personal img {
+    height: 340px;
+    width: 100%;
+    border-radius: 20px;
+  }
+
+  #eventos{
+    max-width: 500px;
+    margin: 10px;
+  }
+  #eventos img{
+    width: 100%;
+    border-radius: 5px;
+  }
+  #titulo{
+    font-weight: bold;
+    color: #098ad8 ;
+  }
+  .separator {
+      height: 2px;
+      background-color: #ffffff;
+      margin: 20px 0;
+    }
+    .contact-us__content {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+  }
+
+  .contact-us__left-side {
+    text-align: left;
+    max-width: 500px;
+    margin-right: 50px;
+  }
+
+  .contact-us__right-side {
+  max-width: 300px;
+}
+  #boton-enviar{
+  margin-bottom: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background-color: white;
+  color: #098ad8 ;
+  text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .contact-us__content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .contact-us__left-side {
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
+  </style>
+  <div style="min-height: 105px;">
+  </div>
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true" aria-label="First slide"></li>
+        <li data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></li>
+        <li data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="carousel-item active"> 
+          <img src="/images/siloe.jpg" class="w-100 d-block" alt="First slide" style="max-height: 612px;">
+        </div>
+        <div class="carousel-item">
+          <img src="/images/slider.jpg" class="w-100 d-block" alt="Second slide"  style="max-height: 612px;">
+        </div>
+        <div class="carousel-item">
+          <img src="/images/banner.png" class="w-100 d-block" alt="Third slide"  style="max-height: 612px;">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <section class="bg-light text-center p-5">
+      <div class="container">
+        <h2 class="mb-4">NUESTRA EXPERIENCIA</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <h3>10+</h3>
+            <p>Años de experiencia en el mercado</p>
+          </div>
+          <div class="col-md-4">
+            <h3>500+</h3>
+            <p>Clientes satisfechos en todo Lambayeque</p>
+          </div>
+          <div class="col-md-4">
+            <h3>10+</h3>
+            <p>Proyectos exitosos completados</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div th:if="${not #lists.isEmpty(proyectos)}" class="row row-flex">
+      <div style="text-align: center;">
+        <h1 style="margin-top: 100px;color: #098ad8;"><strong>PROYECTOS RECIENTES</strong></h1>
+      </div>
+      <div th:each="proyecto : ${proyectos.size() > 1 ? proyectos.subList(proyectos.size() - 2, proyectos.size()) : proyectos}" class="col-card col-lg-4 col-md-6 col-sm-12">
+        <div class="card" style="border-radius: 20px; border: 2px black;">
+            <div class="card-body py-0 px-0" id="card-proyectos">
+                <a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+                    <img th:if="${not #lists.isEmpty(proyecto.imagenes)}" th:src="@{'/images/' + ${proyecto.imagenes[1].fileName}}" class="card-img-top" style="border-radius: 20px;">
+                </a>
+            </div>        
+        </div>
+    </div>
+    
+  </div>
+  <div th:if="${#lists.isEmpty(proyectos)}" class="row-centered">
+    <div class="header">
+        <h1 style="margin-top: 100px; color: #098ad8;"><strong>PROYECTOS</strong></h1>
+    </div>
+    <div class="col-card text-center" style="margin-bottom: 200px; margin-top: 100px;">
+        <h2 id="titulo-sombra">No hay proyectos disponibles</h2>
+    </div>
+  </div>
+  <section class="p-5">
+    <div class="container">
+      <h1 class="mb-5 text-center" style="color: #098ad8;"><strong>NUESTRA EMPRESA</strong></h1>
+      <div class="row" style="font-size: 17px;display: flex;
+      flex-wrap: wrap;
+      justify-content: center;">
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow mb-4">
+              <div class="card-body mx-3 my-3 text-center" style="min-height: 330px;">
+                <h3 class="card-title my-4" style="color: #098ad8; font-size: 40px;">Misión</h3>
+                <p class="card-text">Nuestra misión es ofrecer lotes de alta calidad a precios accesibles, brindando un servicio excepcional a nuestros clientes.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow mb-4">
+              <div class="card-body mx-3 my-3 text-center" style="min-height: 330px;">
+                <h3 class="card-title my-4" style="color: #098ad8; font-size: 40px;">Visión</h3>
+                <p class="card-text">Nuestra visión es ser líderes en el mercado de venta de lotes, expandiendo nuestra presencia a nivel nacional e internacional.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow mb-4">
+              <div class="card-body mx-3 my-auto text-center" style="min-height: 360px;">
+                <h3 class="card-title my-4" style="color: #098ad8; font-size: 40px;">Objetivos</h3>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="bi bi-check-circle-fill" style="color: #098ad8;"></i>&nbsp;&nbsp;Ampliar nuestra oferta de lotes en nuevas ubicaciones.</li>
+                  <li><i class="bi bi-check-circle-fill" style="color: #098ad8;"></i>&nbsp;&nbsp;Mejorar continuamente la calidad de nuestros servicios.</li>
+                  <li><i class="bi bi-check-circle-fill" style="color: #098ad8;"></i>&nbsp;&nbsp;Fomentar relaciones duraderas con nuestros clientes.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+  <aside>
+    <div class="container my-5 nosotros">
+      <h1 id="titulo" class="text-center my-5"><strong>NUESTRO EQUIPO</strong></h1>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+              <img src="images/gerenta.jpg" alt="" class="w-100 mb-3">
+              <h3 style="color: rgb(254, 254, 254);" class="text-center">Rosa <br>García</h3>
+              <div class="separator mb-2"></div>
+              <br>
+              <h4 style="color: rgb(254, 254, 254);">Gerenta General</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+              <img src="images/gerente.jpg" alt="" class="w-100 mb-3">
+              <h3 style="color: rgb(254, 254, 254);" class="text-center">Elmer <br>García</h3>
+              <div class="separator mb-2"></div>
+              <br>
+              <h4 style="color: rgb(254, 254, 254);">Gerente Comercial</h4>
+          </div>
+        </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+                <img src="images/contadora.jpg" alt="" class="w-100 mb-3">
+                <h3 style="color: rgb(254, 254, 254);" class="text-center">Cinthia <br>Benites</h3>
+                <div class="separator mb-2"></div>
+                <br>
+                <h4 style="color: rgb(254, 254, 254);">Contadora</h4>
+                <br>
+             </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+                <img src="images/coordinador.jpg" alt="" class="w-100 mb-3">
+                <h3 style="color: rgb(254, 254, 254);" class="text-center">Gilmer<br>García</h3>
+                <div class="separator mb-2"></div>
+                <div class="py-2">
+                  <h4 style="color: rgb(254, 254, 254);">Coordinador de Operaciones</h4>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+                <img src="images/admin.jpg" alt="" class="w-100 mb-3">
+                <h3 style="color: rgb(254, 254, 254);" class="text-center">Cristhian<br>Chumioque</h3>
+                <div class="separator mb-2"></div>
+                <div class="py-2">
+                  <h4 style="color: rgb(254, 254, 254);">Administrador</h4>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="card" id="personal">
+            <div class="card-body">
+                <img src="images/asesora2.jpg" alt="" class="w-100 mb-3">
+                <h3 style="color: rgb(254, 254, 254);" class="text-center">Susety<br>Rodriguez</h3>
+                <div class="separator mb-2"></div>
+                <div class="py-2">
+                  <h4 style="color: rgb(254, 254, 254);">Asesora de <br> Ventas</h4>
+                </div>
+             </div>
+           </div>
+      </div>
+    </div>
+  </aside>
+  <div class="container py-5 galeria" id="galeria">
+    <h1 id="titulo" class="text-center my-2"><strong>GALERIA</strong></h1>
+    <div class="row py-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/1.png" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/2.jpg" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/3.jpg" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/4.jpg" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/5.jpg" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card position-relative" id="eventos">
+          <img src="/images/6.jpg" class="card-img-top" alt="Imagen">
+          <div class="overlay-events overlay d-flex align-items-center justify-content-center">
+            <img src="/images/siloe.png" alt="Logo" style="height: 100px; width: auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="contact-us mb-5" style="margin-bottom: 50px;">
+  <div class="contact-us__content wrap" style="background-color: #098ad8 ;padding: 50px;padding-left: 0px;display: flex;align-items: center;justify-content: center;">
+    <div class="contact-us__left-side" style="text-align: left; max-width: 560px;">
+      <h2 class="contact-us__title" style="color: #ffffffd1;background-color: rgb(74, 214, 221);padding: 10px 0;padding-left: 50px;padding-right: 50px;display: inline-block;">¿Deseas trabajar con nosotros?<strong>¡CONTÁCTANOS!</strong></h2>
+      <h3 class="contact-us__subtitle"  style="color: white; display: flex;align-items: center;justify-content: center; margin-top: 30px;"><img style="margin-left: 0px;" src="/images/icolapiz.png"><span style="display: block;">Envíanos un mensaje</span></h3>
+    </div>
+    <div class="contact-us__right-side">
+      <form class="form" method="post" id="formulario">
+        <div class="form__left-side">
+          <div class="form__row">           
+            <input class="form-control my-1" type="text" name="nombres" placeholder="Nombre" maxlength="30" required style="background: #fff;">
+          </div>
+          <div class="form__row">
+            <input class="form-control my-1" type="text" name="apellido" placeholder="Apellidos" maxlength="30" required style="background: #fff;">
+          </div>
+          <div class="form__row">
+            <input class="form-control my-1" type="text" name="telefono" placeholder="Teléfono" maxlength="9" required style="background: #fff;">
+          </div>
+          <div class="form__row">
+            <input class="form-control my-1" type="text" name="dni" placeholder="Dni" maxlength="8" required="" style="background: #fff;">
+          </div>
+          <div class="form__row">
+            <input class="form-control my-1" type="email" name="email" placeholder="Correo electrónico" required style="background: #fff;">
+          </div>
+          <div class="form__row">
+            <input class="btn my-2" type="button" name="btn-ingresar" id="boton-enviar" value="Enviar">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div> 
+</div>
+  
+  
+    
+    
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

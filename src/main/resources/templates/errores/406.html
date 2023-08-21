@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+    #home{
+    background: url(/images/siloe.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+  }
+  #overlay{
+    background: rgba(45, 52, 54,0.4);
+    min-height: 100vh;
+  }
+  </style>
+  <header id="home" class="mt-5">
+    <div id="overlay"></div>
+  </header>  
+  <div>
+    <h1 class="text-center">ERROR: 400</h1>
+  </div>
+    <footer th:replace="plantilla/template::footer"></footer>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

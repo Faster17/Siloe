@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+</head>
+<body>
+
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+    body{
+      overflow-x: hidden;
+    }
+    strong{
+      color: #098ad8;
+    }
+    .card-contenido{
+      min-height: 468px;
+      font-size: 17px;
+      color: black;
+      align-items: center;
+      margin-bottom: 30px;
+      background-color: rgba(255, 255, 255, 0.835) !important;
+    }
+    .container-datos{
+  padding-top: 155px;
+  padding-bottom: 46px;
+}
+input[type="number"]::-webkit-inner-spin-button,
+                input[type="number"]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+  </style>
+<header class="banner-perfil">
+  <div class="container container-datos">
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-12">
+        <div class="card bg-white card-contenido" style="border-radius: 20px;">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="d-flex justify-content-between align-items-center mb-1 py-3">
+                <img src="/images/inicio.png" alt="" width="60px" class="me-3">
+                <h2 class="card-title mb-0" ><strong>Mi Perfil</strong></h2>
+              </div>
+            </div>
+            <div class="">
+              <p><strong>Nombres:</strong> <span class="userN" th:text="${usuario.nombres}"></span></p>
+              <p><strong>Apellidos:</strong> <span class="userA" th:text="${usuario.apellidos}"></span></p>
+              <p><strong>Teléfono:</strong> <span class="userT" th:text="${usuario.telefono}"></span></p>
+              <p><strong>DNI:</strong> <span class="userD" th:text="${usuario.dni}"></span></p>
+              <p><strong>Correo:</strong> <span class="userC" th:text="${usuario.correo}"></span></p><br>
+              <div class="text-center">
+                <a href="/cerrar-sesion" class="btn" id="boton-cerrar">Cerrar Sesion</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div  th:if="${ventasMessage == 2}" class="col-lg-8 col-md-12" style="font-size: 15px;">
+        <div id="contenido" class="row" style="min-height: 50vh;background-color: rgba(255, 255, 255, 0.763);margin-left: 10px;margin-right: 10px; border-radius: 20px;">
+          <h2 class="mx-0 mb-0 text-center my-auto"><strong>COMPRAS</strong></h2>
+          <div th:if="${ventasMessage == 2}" class="col-lg-6 col-md-12">
+            <div class="mt-4 ms-3 text-dark">
+                <h2 class="mx-0" style="color: #098ad8; font-weight: bold; text-align: center;">Lote</h2>
+                <div class="text-end">
+                    <select id="ventaSelect" class="me-3 text-white text-center" style="max-width: 100px; border-radius: 5px; border: none; height: 25px; background-color: #098ad8;" onchange="mostrarVenta()">
+                        <option value="">N° Compra</option>
+                        <th:block th:each="venta : ${ventas}">
+                            <option th:value="${venta.id}" th:text="${venta.id}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div id="venta-default" style="color: #098ad8; margin-top: -20px;" class="mx-4 mb-5">
+                    <p class="mx-4"><strong>ID Lote: </strong><span></span></p>
+                    <p class="mx-4"><strong>Proyecto: </strong><span></span></p>
+                    <p class="mx-4"><strong>Costo: </strong><span></span></p>
+                    <p class="mx-4"><strong>Cuotas Pagadas: </strong><span></span></p>
+                    <p class="mx-4"><strong>Cuotas Totales: </strong><span></span></p>
+                    <p class="mx-4"><strong>Contrato: </strong><span></span></p>
+                    <p class="mx-4"><strong>Fecha: </strong><span></span></p>
+                </div>
+                <style>
+                    span{
+                        color: black;
+                    }
+                    #submitButton{
+                    background-color: #075789;
+                    color: #fff;
+                    pointer-events: none;
+                }
+                </style>
+                <th:block th:each="venta : ${ventas}">
+                    <div th:id="'venta-' + ${venta.id}" style="display: none; color: #098ad8; margin-top: -20px;" class="mx-4 mb-5">
+                        <p class="mx-4"><strong>ID Lote: </strong><span class="ms-2 loteId" th:text="${venta.lote.id}"></span></p>
+                        <p class="mx-4"><strong>Proyecto: </strong><span class="ms-2 proyectoNombre" th:text="${venta.lote.tipoLote.proyecto.nombre}"></span></p>
+                        <p class="mx-4"><strong>Costo: </strong><span>S/.</span><span id="costo" class="costo" th:text="${venta.costo}"></span></p>
+                        <p class="mx-4"><strong>Cuotas Pagadas: </strong><span id="pagadas-${venta.id}" class="ms-2 pagadas" th:text="${venta.cuotasPagadas}"></span></p>
+                        <p class="mx-4"><strong>Cuotas Totales: </strong><span id="totales" class="ms-2 totales" th:text="${venta.cuotasTotales}"></span></p>
+                        <p class="mx-4"><strong>Contrato: </strong><span id="contrato" class="ms-2 contrato" th:text="${venta.contrato}"></span></p>
+                        <p class="mx-4"><strong>Fecha: </strong><span class="ms-2" th:text="${venta.fecha}"></span></p>
+                    </div>
+                </th:block>
+              <script>
+                  function mostrarVenta() {
+                      var ventaId = document.getElementById("ventaSelect").value;
+                      var divsVentas = document.querySelectorAll("[id^='venta-']");
+                      const botonPagar = document.getElementById("submitButton");
+                      divsVentas.forEach(function(div) {
+                          div.style.display = "none";
+                          botonPagar.style.pointerEvents="none";
+                          botonPagar.style.backgroundColor="#075789"
+                      });
+                      if (ventaId) {
+                          var divVenta = document.getElementById("venta-" + ventaId);
+                          divVenta.style.display = "block";
+                          var cuotasPagadas = divVenta.querySelector(".pagadas").textContent;
+                          numeroCuota = parseInt(cuotasPagadas) + 1;
+                          var cuotasTotales = divVenta.querySelector(".totales").textContent;
+                          var costo = divVenta.querySelector(".costo").textContent;
+                          var costoNumber = parseFloat(costo);
+                          var proyectoNombre = divVenta.querySelector(".proyectoNombre").textContent;
+                          console.log(proyectoNombre)
+                          var formattedCosto = costoNumber.toFixed(2);
+                          divVenta.querySelector(".costo").textContent = formattedCosto;
+
+                          var probar = cuotasTotales - parseInt(cuotasPagadas);
+                          var contratoInactivo = divVenta.querySelector(".contrato").textContent;
+                          var espera = "Espera";
+                          function customRound(number, precision) {
+                              var factor = Math.pow(10, precision);
+                              return Math.round((number + Number.EPSILON) * factor) / factor;
+                          }
+                          var cuota = parseFloat(costo) / parseFloat(cuotasTotales);
+                          var roundedCuota = customRound(cuota, 2);
+
+                          if(contratoInactivo == espera){
+                            botonPagar.style.backgroundColor="#075789";
+                            botonPagar.style.pointerEvents="none";
+                          }
+                          else{
+                            botonPagar.style.pointerEvents="all";
+                            botonPagar.style.backgroundColor="#098ad8";
+                          }
+                          if(probar == 0){
+                            botonPagar.style.backgroundColor="#075789";
+                            botonPagar.style.pointerEvents="none";
+                            var ventaId = document.getElementById("ventaSelect").value;
+                            $.post("/update-contratoT", {ventaId: ventaId},);
+                            document.getElementById("cuotasPagadas").textContent = "FINALIZADO";
+                            document.getElementById("cuota").style.visibility= "hidden";
+                          }else{
+                            document.getElementById("cuotasPagadas").textContent = "CUOTA N° " + numeroCuota;
+                            document.getElementById("cuota").style.visibility= "visible";
+                          }
+                          function customRound(number, precision) {
+                              var factor = Math.pow(10, precision);
+                              return Math.round((number + Number.EPSILON) * factor) / factor;
+                          }
+                          var cuota = parseFloat(costo) / parseFloat(cuotasTotales);
+
+                          document.getElementById("cuotaF").value = roundedCuota * 100;
+                          document.getElementById("cuota").textContent = roundedCuota;
+                      } else {
+                          var divDefault = document.getElementById("venta-default");
+                          divDefault.style.display = "block";
+
+                      }
+                  }
+                  window.onload = function() {
+                      mostrarVenta();
+                  }
+              </script>
+          </div>
+        </div>
+        <div  th:if="${ventasMessage == 2}" class="col-lg-6">
+          <div class="mx-3">
+            <div class="mx-2 text-center my-4">
+              <h3 style="color: #098ad8;">
+                  <strong>Paga tus cuotas</strong>
+              </h3>
+          </div>
+          <div class="card-body mx-2">
+              <div class="card mb-2">
+                  <div class="card-body bg-light" style="border-radius: 10px;">
+                      <strong><span id="cuotasPagadas" style="color:#098ad8;">- - -</span></strong>
+                      <p class="lead mb-0">PEN <span id="cuota"></span></p>
+                  </div>
+              </div>
+              <form action="#" id="payment-form" method="post">
+                  <input id="api-key" type="hidden" th:value="${stripePublicKey}">
+                  <div class="form-group mt-3 mb-3">
+                      <input class="form-control bg-light" id="dni" name="dni"
+                          placeholder="DNI" type="number" required>
+                      <input type="hidden" id="cuotaF" name="monto">
+                  </div>
+                  <div class="form-group mb-2 text-center bg-light py-3" style="border-radius: 10px;">
+                    <div class="mx-2">
+                      <label class="font-weight-medium mb-2" style="color:#098ad8;font-weight: bold;" for="card-element">
+                        Ingresa los datos de tu tarjeta de crédito o débito
+                    </label>
+                    <div class="w-100 mb-2 mx-1" id="card-element">
+                    </div>
+                    </div>
+                  </div>
+                  <div class="text-danger w-100" id="card-errors" role="alert"></div>
+                  <div class="form-group pt-2 mt-2 text-center">
+                      <button class="btn btn-block" id="submitButton" type="submit">
+                          Proceder al pago
+                      </button>
+                  </div>
+              </form>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div id="myCollapsibleCard" class="card border-0" style="background-color: #098ad8; position: absolute; top: 20%; right: -16px; width: 350px; transform: translateX(295px); z-index: 10; height: 250px;">
+  <button class="btn" id="myCollapsibleCardButton" style="position: absolute; left: 0; height: 100%; font-size: 18px;"><strong style="color: white;">C<br>O <br>N <br>T <br>R <br>A <br>T <br>O</strong></button>
+  <div class="card-body text-white" style="border: 2px solid #ffffff;border-left: 0; border-right: 0; border-radius: 10px;">
+    <div class="text-center mt-3" style="background-color: #4c9dcf;">
+      <div class="text-end me-4">
+        <h5 class="card-title">Cordina tu Contrato Aquí!</h5>
+        <p class="card-text">Con un solo click</p>
+          <img  id="redirigir" style="cursor: pointer;" src="/images/wats.png" alt="" width="100">
+      </div>
+    </div>
+  </div>
+  </div>
+  <script>
+    const redirigirImage = document.getElementById("redirigir");
+    redirigirImage.addEventListener("click", function() {
+      var ventaId = document.getElementById("ventaSelect").value;
+      console.log(ventaId)
+    var divVenta = document.getElementById("venta-" + ventaId);
+        var proyectoNombre = divVenta.querySelector(".proyectoNombre").textContent;
+        var cuotas = divVenta.querySelector(".totales").textContent;
+        var loteId = divVenta.querySelector(".loteId").textContent;
+        var nombreUser = document.querySelector(".userN").textContent;
+        var apellidoUser = document.querySelector(".userA").textContent;
+        var dniUser = document.querySelector(".userD").textContent;
+        var correoUser = document.querySelector(".userC").textContent;
+        var telefonoUser = document.querySelector(".userT").textContent;
+        var message =
+            "*SOLICITUD DE CONTRATO " + "*\n" +
+            "_______________________________" + "\n" + "\n" +
+            "        *DATOS DE USUARIO*   " + "\n" + "\n" +
+            "*Nombres:* " + nombreUser + "\n" +
+            "*Apellidos:* " + apellidoUser + "\n" +
+            "*DNI:* " + dniUser + "\n" +
+            "*Teléfono:* " + telefonoUser + "\n" +
+            "*Correo:* " + correoUser + "\n" +
+            "_______________________________" + "\n" + "\n" +
+            "        *LOTE SEPARADO*   " + "\n" + "\n" +
+            "*Lote ID:* " + loteId + "\n" +
+            "*Del Proyecto:* " + proyectoNombre + "\n" +
+            "*Cuotas:* " + cuotas + "meses sin intereses" + "\n" +
+            "_______________________________" + "\n" + "\n" 
+
+        var messageEncoded = encodeURIComponent(message);
+        var phoneNumber = "51994883507";
+        var whatsappLink = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageEncoded}`;
+        window.open(whatsappLink, "_blank");
+    });
+  </script>
+  <script>
+    let myCollapsibleCard = document.getElementById('myCollapsibleCard');
+    let myCollapsibleCardButton = document.getElementById('myCollapsibleCardButton');
+    let isCollapsed = true;
+  
+    function updateButtonStyles() {
+        if (isCollapsed) {
+            myCollapsibleCardButton.style.backgroundColor = '#098ad8';
+            myCollapsibleCardButton.style.color = 'white';
+        } else {
+            myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+            myCollapsibleCardButton.style.color = 'white';
+        }
+    }
+  
+    updateButtonStyles();
+  
+    myCollapsibleCardButton.addEventListener('click', function() {
+      isCollapsed = !isCollapsed;
+  
+      if (isCollapsed) {
+          myCollapsibleCard.style.transform = 'translateX(295px)';
+      } else {
+          myCollapsibleCard.style.transform = 'translateX(0)';
+      }
+  
+      updateButtonStyles();
+  });
+  
+  
+    myCollapsibleCardButton.addEventListener('mouseenter', function() {
+        if (!isCollapsed) {
+            myCollapsibleCardButton.style.backgroundColor = 'white';
+            myCollapsibleCardButton.style.color = '#098ad8';
+        } else {
+            myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+            myCollapsibleCardButton.style.color = 'white';
+        }
+    });
+  
+    myCollapsibleCardButton.addEventListener('mouseleave', function() {
+        if (!isCollapsed) {
+            myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+            myCollapsibleCardButton.style.color = 'white';
+        } else {
+            myCollapsibleCardButton.style.backgroundColor = '#098ad8';
+            myCollapsibleCardButton.style.color = 'white';
+        }
+    });
+  </script>
+  <style>
+    #myCollapsibleCardButton{
+    border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 2px solid #ffffff;
+  }
+  .enviar-was{
+    width: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #44bee0;
+    color: white;
+    margin-bottom: -16px;
+    font-size: 22px;
+  }
+  .enviar-was:hover {
+    background-color: white !important;
+    color: #098ad8 !important;
+}
+  </style>
+<script>
+  $(function () {
+      var API_KEY = $('#api-key').val();
+      var stripe = Stripe(API_KEY);
+      var elements = stripe.elements();
+      var card = elements.create('card');
+      card.mount('#card-element');
+
+      card.addEventListener('separar', function (event) {
+          var displayError = document.getElementById('card-errors');
+          if (event.error) {
+              displayError.textContent = event.error.message;
+          } else {
+              displayError.textContent = '';
+          }
+      });
+      var form = document.getElementById('payment-form');
+      form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          handlePayments();
+      });
+      function handlePayments() {
+          stripe.createToken(card).then(function (result) {
+              if (result.error) {
+                  var errorElement = document.getElementById('card-errors');
+                  errorElement.textContent = result.error.message;
+              } else {
+                  var token = result.token.id;
+                  var dni = $('#dni').val();
+                  var monto = $('#cuotaF').val();
+                  $.post(
+                      "/create-charge",
+                      {dni: dni, token: token, monto: monto},
+                      function (data) {
+                          alert(data.details);
+                      }, 'json');
+                  var ventaId = document.getElementById("ventaSelect").value;
+                    
+                    $.post("/update-cuotas-pagadas", {ventaId: ventaId}, function () {
+                        var cuotasPagadasElement = document.getElementById("cuotasPagadas");
+                        cuotasPagadasElement.textContent = parseInt(cuotasPagadasElement.textContent) + 1;
+                    });
+                    
+              };
+          });
+      };
+  });
+</script>
+
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>
+

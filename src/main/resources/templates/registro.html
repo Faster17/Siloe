@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+</head>
+<div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+<header>
+    <div class="container container-banner">
+        <div class="row">
+          <div class="col-lg-6 py-5">
+                <h2 id="titulo" class="text-white"><strong>REGÍSTRATE Y SE PARTE DE LOS USUARIOS DE SILOE</strong></h2><br>
+                <h4 id="titulo" class="text-white"><strong>Usa tus datos reales. Los usaremos cuando quieras adquirir un lote</strong></h4>
+                <form class="form-control my-5" th:action="@{/registro}" th:object="${usuario}" method="post" style="opacity: 0.9; color: #098ad8; font-size: 19px;">
+                    <div class="form-group" style="opacity: 1;">
+                        <label for="nombres" class="my-2"><strong>Nombres:</strong></label>
+                        <input type="text" class="form-control" id="nombres" th:field="*{nombres}" required><br>
+                    </div>
+                    <style>
+                        input[type="number"]::-webkit-inner-spin-button,
+                        input[type="number"]::-webkit-outer-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                        input[type="number"] {
+                            -moz-appearance: textfield;
+                        }
+                    </style>
+                    <div class="form-group">
+                        <label for="apellidos"><strong>Apellidos:</strong></label>
+                        <input type="text" class="form-control" id="apellidos" th:field="*{apellidos}" required><br>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="telefono"><strong>Teléfono:</strong></label>
+                        <input type="number" class="form-control" id="telefono" th:field="*{telefono}"><br>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="dni"><strong>DNI:</strong></label>
+                        <input type="number" class="form-control" id="dni" th:field="*{dni}" required><br>
+                        <p th:if="${errorDni}" class="error-message" th:text="${errorDni}"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="correo"><strong>Correo:</strong></label>
+                        <input type="email" class="form-control" id="correo" th:field="*{correo}" required><br>
+                        <p th:if="${errorCorreo}" class="error-message" th:text="${errorCorreo}"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="contrasena"><strong>Contraseña:</strong></label>
+                        <input type="password" class="form-control" id="contrasena" th:field="*{contrasena}" required><br>
+                    </div>
+                    <div>
+                        <button id="boton-cerrar" type="submit" class="btn my-2 px-5" style=" font-size: 19px;"><strong>Registrarse</strong></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+  
+<body>
+    
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

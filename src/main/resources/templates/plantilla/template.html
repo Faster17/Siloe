@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:fragment="head">
+    <title>Siloe</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="shortcut icon" href="/images/inicio.png" type="image/x-icon">
+    <script src="http://js.stripe.com/v3/"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+  <!-- Header -->
+<div class="fixed-top" th:fragment="barra" style="background-color: #098ad8 ">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">
+        <img src="/images/blanco.png" alt="personal" id="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end text-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home"><i class="bi bi-house-door-fill"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/proyectos">Proyectos</a>
+            
+          </li>      
+          <li class="nav-item">
+            <a class="nav-link" href="/contacto">Contáctanos</a>
+          </li>
+          <li th:if="${rol == 4}" class="nav-item text">
+            <a class="nav-link" href="/perfil"><i class="bi bi-person-circle"></i></a>
+          </li>
+          <li th:if="${rol == 0}" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="navbarDarkDropdownMenuLink" style="background-color: #098ad8">
+              <li><a class="dropdown-item" href="/perfil">Ver Perfil</a></li>
+              <li><a class="dropdown-item" href="/cerrar-sesion">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="fixed-top" th:fragment="barra_admin" style="background-color: #098ad8 ">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">
+        <img src="/images/blanco.png" alt="personal" id="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end text-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home"><i class="bi bi-house-door-fill"></i></a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Proyectos
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="navbarDarkDropdownMenuLink" style="background-color: #098ad8;">
+              <li><a class="dropdown-item text-white" href="/proyectos">Ver Proyectos</a></li>
+              <li><a class="dropdown-item text-white" href="/proyectos/new" title="Añadir">Añadir</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contacto">Contáctanos</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="navbarDarkDropdownMenuLink" style="background-color: #098ad8;">
+              <li><a class="dropdown-item text-white" href="/perfil">Ver Perfil</a></li>
+              <li><a class="dropdown-item text-white" href="/ventas/mostrar">Admin Ventas</a></li>
+              <li><a class="dropdown-item text-white" href="/cerrar-sesion">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="fixed-top" th:fragment="barra_superadmin" style="background-color: #098ad8 ">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">
+        <img src="/images/blanco.png" alt="personal" id="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end text-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home"><i class="bi bi-house-door-fill"></i></a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Proyectos
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="navbarDarkDropdownMenuLink" style="background-color: #098ad8;">
+              <li><a class="dropdown-item text-white " href="/proyectos">Ver Proyectos</a></li>
+              <li><a class="dropdown-item text-white" href="/proyectos/new" title="Añadir">Añadir</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contacto">Contáctanos</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="navbarDarkDropdownMenuLink" style="background-color: #098ad8;">
+              <li><a class="dropdown-item text-white" href="/perfil">Ver Perfil</a></li>
+              <li><a class="dropdown-item text-white" href="/ventas/mostrar">Admin Ventas</a></li>
+              <li><a class="dropdown-item text-white" href="/cambiar-rol">Nuevo Admin</a></li>
+              <li><a class="dropdown-item text-white" href="/cerrar-sesion">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+  <!-- Body -->
+  <main th:fragment="blanco" class="container mt-5">
+    <div class="row">
+      <div class="col">
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer th:fragment="footer" class="text-white text-center text-lg-start" style="background-color: #098ad8 ;">
+    <div class="container p-4">
+      <div class="row">
+        <div class="col-lg-6 col-md-12 mb-md-4">
+          <div class="row">
+            <div class="col-md-6">
+              <a href=""><img src="/images/blanco.png" alt="" style="width: 120px; margin-top: 10px;"></a>
+            </div>
+            <div class="col-md-6 mt-4">
+              <a id="enlace" href="/nosotros"><i class="bi bi-house-door-fill"></i>&nbsp;&nbsp;&nbsp;Cal. Atahualpa Nro. 1041 , Reque, Peru, 14801 &nbsp;&nbsp;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 ">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mt-2 mb-3">Contacto</h5>
+                Teléfono: &nbsp;977 568 111 <br>
+                Email: &nbsp;info@siloe.org <br>
+                <a id="enlace" href="https://web.facebook.com/SiloeInmobiliaria/"> WhatsApp &nbsp;&nbsp; <i class="bi bi-whatsapp"></i></a>
+            </div>
+            <div class="col-md-6">
+              <h5 class="mt-2 mb-3">Síguenos en:</h5>
+                  <a id="enlace" href="https://web.facebook.com/SiloeInmobiliaria/">Facebook &nbsp;&nbsp; <i class="bi bi-facebook"></i></a><br>
+                  <a id="enlace" href="https://web.facebook.com/SiloeInmobiliaria/">Instagram &nbsp; <i class="bi bi-instagram"></i></a><br>
+                  <a id="enlace" href="https://web.facebook.com/SiloeInmobiliaria/">Tik Tok &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="bi bi-tiktok"></i></a><br>
+                  <a id="enlace" href="https://web.facebook.com/SiloeInmobiliaria/">Youtube &nbsp;&nbsp;&nbsp;&nbsp; <i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      Siloe Inmobiliaria &copy;2023 &nbsp; 
+      <a href="https://peru.com/"><img src="/images/peru.png" alt="Icono Personalizado" style="width: 20px;"></a>
+      &nbsp; Todos los Derechos Reservados
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

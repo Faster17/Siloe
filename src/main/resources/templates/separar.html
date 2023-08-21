@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        const tipoLotePrecio = parseFloat(document.getElementById("tipoLotePrecio").textContent);
+        const formattedPrecio = new Intl.NumberFormat('es-PE', {
+            style: 'currency',
+            currency: 'PEN'
+        }).format(tipoLotePrecio);
+        document.getElementById('formattedPrecio').textContent = formattedPrecio;
+    });
+</script>
+
+<style>
+  .chat-messages {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 10px;
+      min-height: 310px;
+      display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+  }
+  .user-message{
+    align-self: flex-end;
+  }
+  .user-message,
+  .bot-message {
+      max-width: 70%;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 10px;
+  }#titulo{
+    font-weight: bold;
+    color: #ffffff ;
+}
+#titulo-p{
+    font-weight: bold;
+    color: #098ad8 ;
+}
+#mini-titulos{
+    font-weight: bold;
+    color: #098ad8 ;
+    font-size: 18px;
+}
+  .user-message {
+      background-color: #42a3df;
+      color: #ffffff;
+      float: right;
+  }
+  .bot-message {
+      background-color: #53cbc3;
+      color: #ffffff;
+  }
+  #chat-container {
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #dce9edbc;
+  }
+  
+  #chat-input {
+      display: flex;
+      margin-top: 10px;
+  }
+  
+  #message-input {
+      flex-grow: 1;
+      border: 1px solid #ccc;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 0;
+  }
+  
+  #send-button {
+      background-color: #098ad8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+  }
+  #myCollapsibleCardButton{
+    border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border: 2px solid #ffffff;
+  }
+  .enviar-was{
+    width: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #44bee0;
+    color: white;
+    margin-bottom: -16px;
+    font-size: 22px;
+  }
+  .enviar-was:hover {
+    background-color: white !important;
+    color: #098ad8 !important;
+}
+  </style>
+<div id="myCollapsibleCard" class="card border-0" style="background-color: #098ad8; position: absolute; top: 12%; left: -16px; width: 350px; transform: translateX(-295px); z-index: 10;">
+  <button class="btn" id="myCollapsibleCardButton" style="position: absolute; right: 0; height: 100%; font-size: 18px;"><strong><br> P<br>O <br>R <br><br>T <br>R <br>A <br>N <br>S <br>F <br>E <br>R <br>E <br>N <br>C <br>I <br>A</strong></button>
+  <div class="card-body text-white" style="border: 2px solid #ffffff;border-left: 0; border-right: 0; border-radius: 10px;">
+    <div class="d-flex align-items-center mt-3" style="background-color: #4c9dcf;">
+      <div class="me-3">
+        <img src="/images/yape.png" alt="Logo 1" width="100">
+      </div>
+      <div>
+        <h5 class="card-title">Yape</h5>
+        <p class="card-text">977 567 111</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center mt-3" style="background-color: #4c9dcf;">
+      <div class="me-3">
+        <img src="/images/bcp.png" alt="Logo 1" width="100" height="100">
+      </div>
+      <div>
+        <h5 class="card-title">BCP</h5>
+              <p class="card-text">4000 0000 0000 0000</p>
+          </div>
+      </div>
+      <div class="d-flex align-items-center mt-3" style="background-color: #4c9dcf;">
+        <div class="me-3">
+          <img src="/images/bbva.jpg" alt="Logo 1" width="100" height="100">
+        </div>
+        <div>
+            <h5 class="card-title">BBVA</h5>
+            <p class="card-text">4000 0000 0000 0000</p>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mt-3" style="background-color: #4c9dcf;">
+      <div class="me-3">
+        <img src="/images/inter.jpg" alt="Logo 1" width="100" height="100">
+      </div>
+      <div>
+          <h5 class="card-title">Interbank</h5>
+          <p class="card-text">4000 0000 0000 0000</p>
+      </div>
+      
+  </div>
+  <button id="enviarWhatsapp" class="btn mt-3 py-3 enviar-was text-center"><span class="me-4"><strong>Enviar Comprobante</strong></span></button>
+  </div>
+  </div>
+</div>
+<script>
+  let myCollapsibleCard = document.getElementById('myCollapsibleCard');
+  let myCollapsibleCardButton = document.getElementById('myCollapsibleCardButton');
+  let isCollapsed = true;
+
+  function updateButtonStyles() {
+      if (isCollapsed) {
+          myCollapsibleCardButton.style.backgroundColor = '#098ad8';
+          myCollapsibleCardButton.style.color = 'white';
+      } else {
+          myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+          myCollapsibleCardButton.style.color = 'white';
+      }
+  }
+
+  updateButtonStyles();
+
+  myCollapsibleCardButton.addEventListener('click', function() {
+    isCollapsed = !isCollapsed;
+
+    if (isCollapsed) {
+        myCollapsibleCard.style.transform = 'translateX(-295px)';
+    } else {
+        myCollapsibleCard.style.transform = 'translateX(0)';
+    }
+
+    updateButtonStyles();
+});
+
+
+  myCollapsibleCardButton.addEventListener('mouseenter', function() {
+      if (!isCollapsed) {
+          myCollapsibleCardButton.style.backgroundColor = 'white';
+          myCollapsibleCardButton.style.color = '#098ad8';
+      } else {
+          myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+          myCollapsibleCardButton.style.color = 'white';
+      }
+  });
+
+  myCollapsibleCardButton.addEventListener('mouseleave', function() {
+      if (!isCollapsed) {
+          myCollapsibleCardButton.style.backgroundColor = '#44bee0';
+          myCollapsibleCardButton.style.color = 'white';
+      } else {
+          myCollapsibleCardButton.style.backgroundColor = '#098ad8';
+          myCollapsibleCardButton.style.color = 'white';
+      }
+  });
+</script>
+
+
+<body style="background-image: url('/images/background6.png'); background-size: cover;">
+  <div class="container" style="margin-top: 121px; margin-bottom: 24px;">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <h4 id="titulo" class="text-center mt-4 mx-5">ESTÁS A UN PASO DE OBTENER EL LOTE PARA TU CASA DE ENSUEÑO</h4>
+        <div class="row">        
+          <div class="col-lg-6 col-md-12">
+            <div class="card mt-4" style="min-height: 170px; background-color: #098ad8; font-size: 25px; font-weight: bold;">
+              <div class="content mx-4 mt-4 text-center text-white">
+                  <span>Solo con S/500 soles puedes separar tu lote YA!</span><br>
+                  <span style="font-size: 25px; color: #d8d2d2;">Tú eliges el método de pago</span>
+              </div>
+            </div>
+            <div class="card mt-4" style="min-height: 240px; background-color: #ffffffda;">
+              <h4 class="text-center mt-3 mb-3" style="color: #098ad8;"><strong>LOTE ELEGIDO</strong></h4>
+                <div class="content mx-2">
+                    <span class="text-start ms-5" id="mini-titulos">Proyecto: </span>
+                    <input type="hidden" name="proyectoNombre" th:value="${proyectoNombre}">
+                    <span class="text-start" th:text="${proyectoNombre}"></span><br>
+                    <span class="text-start ms-5" id="mini-titulos">N° Lote: </span>
+                    <input type="hidden" name="loteIndice" th:value="${loteIndice}">
+                    <span th:text="${loteIndice}"></span><br>
+                    <span class="text-start ms-5" id="mini-titulos">Tamaño: </span>
+                    <input type="hidden" name="tipoLoteTamano" th:value="${tipoLoteTamano}">
+                    <span th:text="${tipoLoteTamano}"></span> <span>m²</span><br>
+                    <span class="text-start ms-5" id="mini-titulos">Precio: </span>
+                    <input type="hidden" name="tipoLotePrecio" th:value="${tipoLotePrecio}">
+                    <span id="tipoLotePrecio" style="display: none;" th:text="${tipoLotePrecio}"></span>
+                    <span id="formattedPrecio"></span><br>
+                    <input type="hidden" name="loteId" th:value="${loteId}">
+                    <input type="hidden" name="nombreU" th:value="${usuario.nombres}">
+                    <input type="hidden" name="apellidoU" th:value="${usuario.apellidos}">
+                    <input type="hidden" name="dniU" th:value="${usuario.dni}">
+                    <input type="hidden" name="telefonoU" th:value="${usuario.telefono}">
+                    <div class="">
+                      <span class="text-start ms-5" id="mini-titulos">Cuotas: </span>
+                      <select style="max-width: 70px; border-radius: 5px;background-color: #ffffff9c;border: none;" name="cuotas" id="cuotasT">
+                        <option  value="1"selected>1</option>
+                        <option  value="12"selected>12</option>
+                        <option value="16" >16</option>
+                        <option value="24">24</option>
+                      </select>
+                      <span>Meses sin intereses</span>
+                    </div>
+                </div>
+                </div>
+                <div id="modalSeparacion" class="modal">
+                  <div class="modal-content mx-auto">
+                      <p class="mx-4">Su separación está en estado de Espera, por ahora puede ver los detalles de su compra en el ícono de perfil y compras.</p>
+                      <button class="button mx-5" onclick="location.href='/perfil'">Compras</button>
+                  </div>
+              </div>
+              <style>
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    padding-top: 100px;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.4);
+                }
+
+                .modal-content {
+                    background-color: #fff;
+                    margin-top: 200px;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                    text-align: center;
+                }
+                .close {
+                    color: #aaa;
+                    font-size: 28px;
+                    font-weight: bold;
+                    position: absolute;
+                    top: 0;
+                    right: 3%;
+                    cursor: pointer;
+                }
+                .close:hover,
+                .close:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                .button {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    margin: 10px;
+                    background-color: #098ad8;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                #submitButton{
+                    background-color: #098ad8;
+                    color: #fff;
+                }
+                .custom-file-input::-webkit-file-upload-button {
+                background-color: #098ad8;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                cursor: pointer;
+              }
+                input[type="number"]::-webkit-inner-spin-button,
+                input[type="number"]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+              </style>              
+              <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                const enviarWhatsappButton = document.getElementById("enviarWhatsapp");
+                const modalSeparacion = document.getElementById("modalSeparacion");
+                const modalClose = document.getElementById("modalClose");
+                function openModal() {
+                    modalSeparacion.style.display = "block";
+                }
+                enviarWhatsappButton.addEventListener("click", function() {
+                    var proyectoNombre = document.querySelector('[name="proyectoNombre"]').value;
+                    var loteIndice = document.querySelector('[name="loteIndice"]').value;
+                    var tipoLoteTamano = document.querySelector('[name="tipoLoteTamano"]').value;
+                    var tipoLotePrecio = parseFloat(document.querySelector('[name="tipoLotePrecio"]').value);
+                    var cuotas = document.querySelector('[name="cuotas"]').value;
+                    var loteId = document.querySelector('[name="loteId"]').value;
+                    var nombreUser = document.querySelector('[name="nombreU"]').value;
+                    var apellidoUser = document.querySelector('[name="apellidoU"]').value;
+                    var dniUser = document.querySelector('[name="dniU"]').value;
+                    var telefonoUser = document.querySelector('[name="telefonoU"]').value;
+                    var formattedPrecio = tipoLotePrecio.toLocaleString("es-PE", {
+                        style: "currency",
+                        currency: "PEN",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    var message =
+                        "*SEPARACIÓN DEL LOTE ID " + loteId + "*\n" +
+                        "_______________________________" + "\n" + "\n" +
+                        "        *DATOS DE USUARIO*   " + "\n" + "\n" +
+                        "*Nombres:* " + nombreUser + "\n" +
+                        "*Apellidos:* " + nombreUser + "\n" +
+                        "*DNI:* " + dniUser + "\n" +
+                        "*Teléfono:* " + telefonoUser + "\n" +
+                        "_______________________________" + "\n" + "\n" +
+                        "        *LOTE SEPARADO*   " + "\n" + "\n" +
+                        "*Del Proyecto:* " + proyectoNombre + "\n" +
+                        "*Nro del Lote:* " + loteIndice + "\n" +
+                        "*Tamaño:* " + tipoLoteTamano + "\n" +
+                        "*Precio:* " + formattedPrecio + "\n" +
+                        "*Cuotas:* " + cuotas + "meses sin intereses" +
+                        "_______________________________" + "\n" + "\n" +
+                        "*Adjunto mi Comprobante*" + "\n" +
+                        "_______________ ↓ _______________";
+
+                    var messageEncoded = encodeURIComponent(message);
+                    var phoneNumber = "51994883507";
+                    var whatsappLink = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageEncoded}`;
+
+                    window.open(whatsappLink, "_blank");
+                    var xhr = new XMLHttpRequest();
+                    var cuotasTotales = document.getElementById('cuotasT').value;
+                    xhr.open("POST", "/lotes/actualizar-estado-lote?loteId=" + loteId + "&cuotasTotales=" + cuotasTotales, true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                        }
+                    };
+                    xhr.send();
+                    openModal();
+                });
+                modalClose.addEventListener("click", closeModal);
+                window.addEventListener("click", function(event) {
+                    if (event.target === modalSeparacion) {
+                        closeModal();
+                    }
+                });
+            });
+            </script>
+            <span id="ubi" th:text="${proyectoUbi}" style="display: none;"></span>
+          </div>
+          <div class="col-lg-6 col-md-12 mt-4">
+            <div class="card" style="min-height: 437px;">
+                <div class="mx-2 text-center mt-3">
+                    <h3 style="color: #098ad8;">
+                        <strong>REALIZA TU SEPARACIÓN</strong>
+                    </h3>
+                    <span> Por favor complete el siguiente formulario para proceder con su separación</span>
+                </div>
+                <div class="card-body mx-2">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <strong style="color: #098ad8;"><span>SEPARAR LOTE N° <span th:text="${loteIndice}"></span></span></strong>
+                            <p class="lead mb-0">PEN 500</p>
+                        </div>
+                    </div>
+                    <form action="#" id="payment-form" method="post">
+                        <input id="api-key" type="hidden" th:value="${stripePublicKey}">
+                        <div class="form-group mt-3 mb-3">
+                            <input class="form-control" id="dni" name="dni"
+                                placeholder="DNI" type="number" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="font-weight-medium mb-2" style="color:#098ad8" for="card-element">
+                                Ingresa los datos de tu tarjeta de crédito o débito
+                            </label>
+                            <div class="w-100 mb-2" id="card-element">
+                            </div>
+                        </div>
+                        <div class="text-danger w-100" id="card-errors" role="alert"></div>
+                        <div class="form-group pt-2 mt-3 text-center">
+                            <button class="btn btn-block" id="submitButton" type="submit">
+                                Proceder al pago
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12 d-flex justify-content-center">
+        <div class="card mt-4" style="min-height: 530px; max-width: 400px;background-color: #0989d8d1; border: 0;">
+            <h4 id="titulo" class="mt-3 mx-3 text-center">Por si necesitas aclarar tus dudas</h4>
+            <p class="text-center" id="titulo">Realiza tus consultas</p>
+            <div id="chat-container" class="mx-4 mt-2">
+                <div id="chat-messages" class="chat-messages"></div>
+                <div id="chat-input">
+                    <input class="form-control" type="text" id="message-input" placeholder="Escribe tu mensaje...">
+                    <button class="btn" id="send-button">Enviar</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const messageInput = document.getElementById("message-input");
+    const sendButton = document.getElementById("send-button");
+    const chatMessages = document.getElementById("chat-messages");
+
+    sendButton.addEventListener("click", function() {
+        const userMessage = messageInput.value.trim();
+        if (userMessage !== "") {
+            const userMessageElement = document.createElement("div");
+            userMessageElement.classList.add("user-message", "text-end");
+            userMessageElement.innerHTML = `<strong>Tú</strong><br>${userMessage}`;
+            chatMessages.appendChild(userMessageElement);
+            messageInput.value = "";
+            const botResponse = getBotResponse(userMessage);
+            const botMessageElement = document.createElement("div");
+            botMessageElement.classList.add("bot-message");
+            botMessageElement.innerHTML = `<strong>Bot</strong><br>${botResponse}`;
+            chatMessages.appendChild(botMessageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+
+    function getBotResponse(userMessage) {
+        const ubi = document.getElementById("ubi").textContent;
+        const responses = {
+            "hola": "¡Hola! ¿En qué puedo ayudarte?",
+            "precio": "El precio lo puedes ver en LOTE ELEGIDO",
+            "presio": "El precio lo puedes ver en LOTE ELEGIDO",
+            "precios": "El precio lo puedes ver en LOTE ELEGIDO",
+            "adios": "¡Hasta luego! Si tienes más preguntas, no dudes en preguntar.",
+            "ubicado": "El lote está ubicado en " + ubi,
+        };
+        for (const keyword in responses) {
+            if (userMessage.toLowerCase().includes(keyword)) {
+                return responses[keyword];
+            }
+        }
+        return "Lo siento, no entiendo tu pregunta. ¿Podrías reformularla?";
+    }
+});
+
+function formatCurrencyToSoles(value) {
+    const formattedValue = parseFloat(value).toFixed(2);
+    const [integerPart, decimalPart] = formattedValue.split(".");
+    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const formattedCurrency = formattedIntegerPart + "." + decimalPart + " PEN";
+    return formattedCurrency;
+}
+
+</script>
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h4 class="modal-title" id="successModalLabel">¡FELICIDADES!</h4>
+                <p>La separación de tu lote ha sido un éxito.</p>
+                <p>Puedes revisar tu compra en la sección de Perfil/Compras.</p>
+                <button id="viewProfileButton" class="btn btn-primary">Ir a Perfil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var API_KEY = $('#api-key').val();
+        var stripe = Stripe(API_KEY);
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        card.addEventListener('separar', function (event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            handlePayments();
+        });
+
+        function handlePayments() {
+    stripe.createToken(card).then(function (result) {
+        if (result.error) {
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = result.error.message;
+        } else {
+            var loteId = document.querySelector('[name="loteId"]').value;
+            var token = result.token.id;
+            var dni = $('#dni').val();
+            
+            // Get the value of the cuotasT field
+            var cuotasTotales = $('#cuotasT').val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/lotes/create-charge",
+                data: { dni: dni, token: token },
+                dataType: "json",
+                success: function (chargeData) {
+                    alert(chargeData.details);
+                    $.ajax({
+                        type: "POST",
+                        // Include the cuotasTotales parameter in the request
+                        url: "/lotes/actualizar-estado-lote?loteId=" + loteId + "&cuotasTotales=" + cuotasTotales,
+                        dataType: "json",
+                    });
+                },
+                error: function () {
+                    alert("Error al procesar el cargo");
+                }
+            });
+        }
+    });
+}
+
+    });
+</script>
+
+</body>
+<footer th:replace="plantilla/template::footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>

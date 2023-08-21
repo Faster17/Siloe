@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://thymeleaf.org">
+<head th:replace="plantilla/template::head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div th:if="${rol == 1}">
+    <div th:replace="plantilla/template::barra_admin"></div>
+  </div>
+  <div th:if="${rol == 0 || rol == 4}">
+      <div th:replace="plantilla/template::barra"></div>
+  </div>
+  <div th:if="${rol == 2}">
+    <div th:replace="plantilla/template::barra_superadmin"></div>
+  </div>
+  <style>
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    @media screen and (max-width: 991px) {
+    .banner-rol {
+        min-height: 140vh !important;
+    }
+    .form-control {
+        margin-left: 0;
+    }
+    #contenido{
+        width: 100%;
+    }
+    }
+  </style>
+  <header class="banner-rol" style="min-height: 64.3vh;">
+    <div class="container container-banner text-white mt-5" style="font-size: 20px;">
+        <div class="row" style="min-height: 60vh; margin: 10px; margin-bottom: 10px; margin-top: 80px;">
+            <div class="col-lg-4 mb-4 mt-3">
+                <h1 class="mt-5" style="font-weight: bold;">Buscar Cliente</h1>
+                <form class="mt-5" method="post" th:action="@{/ventas/mostrar}">
+                    <label for="dni"><strong>DNI del Cliente:</strong></label><br><br>
+                    <input class="form-control" type="number" style="width: 90%;" id="dni" name="dni" required th:value="${dni}"><br>
+                    <button id="boton-cerrar" class="btn" type="submit"><strong>Buscar Cliente</strong></button>
+                    <br>
+                    <p th:if="${mensaje}"><strong><span class="text-white" th:text="${mensaje}"></span></strong></p>
+                </form>
+            </div>
+            <div class="col-lg-8 mt-3" style="font-size: 15px; margin-bottom: 20px;">
+                <div id="contenido" class="row" style="min-height: 50vh;">
+                  <h1 class="mx-0 mb-0" style="font-weight: bold; text-align: center; margin-top: 30px;">Actualización de Ventas</h1>
+                  <div class="col-lg-6 col-md-12">
+                    <div class="card ms-3 mt-4" style="background-color: rgba(255, 255, 255, 0.805); border-radius: 10px;">
+                      <h2 class="mx-0" style="color: #098ad8; font-weight: bold; text-align: center; margin: 20px;">Cliente</h2>
+                      <div class="mx-5 mb-4" style="color: #098ad8;">
+                        <br>
+                          <p><strong>Nombre: </strong> <span class="ms-2" th:text="${usuario?.nombres}"></span></p>
+                          <p><strong>Apellidos: </strong> <span class="ms-2" th:text="${usuario?.apellidos}"></span></p>
+                          <p><strong>DNI: </strong> <span class="ms-2" th:text="${usuario?.dni}"></span></p>
+                          <p><strong>Teléfono: </strong> <span class="ms-2" th:text="${usuario?.telefono}"></span></p>
+                          <p><strong>Correo: </strong> <span class="ms-2" th:text="${usuario?.correo}"></span></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-12">
+                    <div class="mt-4 ms-3 text-dark" style="background-color: rgba(255, 255, 255, 0.805); min-height: 45.8vh; border-radius: 10px;">
+                        <br>
+                        <h2 class="mx-0" style="color: #098ad8; font-weight: bold; text-align: center;">Venta</h2>
+                        <div class="text-end">
+                            <select id="ventaSelect" class="me-3 text-white text-center" style="width: 90px; border-radius: 5px; border: none; height: 25px; background-color: #098ad8;" onchange="mostrarVenta()">
+                                <option value="">ID Venta</option>
+                                <th:block th:each="venta : ${ventas}">
+                                    <option th:value="${venta.id}" th:text="${venta.id}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        
+                        <script>
+                          function mostrarFormulario() {
+                              var miniformulario = document.getElementById("miniformulario");
+                              if (miniformulario.style.display === "none") {
+                                  miniformulario.style.display = "block";
+                              } else {
+                                  miniformulario.style.display = "none";
+                              }
+                          }
+                      </script>
+                        <div id="venta-default" style="color: #098ad8; margin-top: -20px;" class="mx-4 mb-5">
+                            <p class="mx-4"><strong>ID Usuario: </strong><span></span></p>
+                            <p class="mx-4"><strong>ID Lote: </strong><span></span></p>
+                            <p class="mx-4"><strong>Costo: </strong><span></span></p>
+                            <p class="mx-4"><strong>Cuotas Pagadas: </strong><span></span></p>
+                            <p class="mx-4"><strong>Cuotas Totales: </strong><span></span></p>
+                            <p class="mx-4"><strong>Contrato: </strong><span></span></p>
+                            <p class="mx-4"><strong>Act. Contrato: </strong><span></span></p>
+                        </div>
+                        <style>
+                            span{
+                                color: black;
+                            }
+                            .editar{
+                                background-color: #098ad8;
+                                color: #ffff;
+                                width: 80%;
+                            }
+                        </style>
+                        <th:block th:each="venta : ${ventas}">
+                            <div th:id="'venta-' + ${venta.id}" style="display: none; color: #098ad8; margin-top: -20px;" class="mx-4">
+                                <p class="mx-4"><strong>ID Usuario: </strong><span class="ms-2" th:text="${venta.usuario.id}"></span></p>
+                                <p class="mx-4"><strong>ID Lote: </strong><span class="ms-2" th:text="${venta.lote.id}"></span></p>
+                                <p class="mx-4"><strong>Costo: </strong><span>S/.</span><span id="costo" class="costo" th:text="${venta.costo}"></span></p>
+                                <p class="mx-4"><strong>Cuotas Pagadas: </strong><span id="pagadas-${venta.id}" class="ms-2" th:text="${venta.cuotasPagadas}"></span></p>
+                                <p class="mx-4"><strong>Cuotas Totales: </strong><span id="totales" class="ms-2" th:text="${venta.cuotasTotales}"></span></p>
+                                <p class="mx-4"><strong>Contrato: </strong><span id="contrato" class="ms-2" th:text="${venta.contrato}"></span></p>
+                                <p class="mx-4"><strong>Act. Contrato: </strong><span class="ms-2" th:text="${venta.fecha}"></span></p>
+                            </div>
+                        </th:block>
+                        
+                      <div class="text-center mx-2">
+                          <button id="editar" class="btn mx-auto btn-outline-dark border-0 mt-1 editar" onclick="mostrarFormulario()">Contrato &nbsp;<i class="bi bi-pencil"></i></button>
+                      </div>
+                      <div id="miniformulario" style="display: none;" class="mt-1 mx-2">
+                        <form class="mt-2" style="color: #098ad8;">
+                            <div class="d-flex justify-content-center">
+                                <label for="contrato"><strong>Contrato:</strong></label>
+                                <select id="contratoSelect" class="ms-2 text-center" style="border: none; color: #098ad8; border-radius: 5px; height: 25px; background-color: #ffffff;" onchange="">
+                                    <option value="Espera">Espera</option>
+                                    <option value="Iniciado">Iniciado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                    <option value="Concretado">Concretado</option>
+                                </select>
+                                <button class="ms-2 editar" style="max-width: 30px; height: 28px; border: none; border-radius: 5px; font-size: 15px;" onclick="actualizarContrato()"><i class="bi bi-arrow-clockwise"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <script>
+                        function actualizarContrato() {
+                            var contratoValue = document.getElementById("contratoSelect").value;
+                            var ventaId = document.getElementById("ventaSelect").value;
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("POST", "/ventas/actualizar-estado-contrato");
+                            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            xhr.onload = function() {
+                                if (xhr.status === 200) {
+                                    var contratoField = document.querySelector("#venta-" + ventaId + " #contrato");
+                                    contratoField.textContent = contratoValue;
+                                }
+                            };
+                            xhr.send("ventaId=" + ventaId + "&contrato=" + contratoValue);
+                            alert("Estado del Contrato actualizado correctamente");
+                        }
+                    </script>
+                    
+                      
+                      <script>
+                          function mostrarVenta() {
+                                const precioElement = document.getElementById("precio");
+                              var ventaId = document.getElementById("ventaSelect").value;
+                              var divsVentas = document.querySelectorAll("[id^='venta-']");
+                              divsVentas.forEach(function(div) {
+                                  div.style.display = "none";
+                              });
+                              if (ventaId) {
+                                  var divVenta = document.getElementById("venta-" + ventaId);
+                                  var botonE = document.getElementById("editar");
+                                  botonE.style.display = "block";
+                                  divVenta.style.display = "block";
+                                  var costo = divVenta.querySelector(".costo").textContent;
+                                    var costoNumber = parseFloat(costo);
+                                    var formattedCosto = costoNumber.toFixed(2);
+                                    divVenta.querySelector(".costo").textContent = formattedCosto;
+                                  var contratoValue = document.querySelector("#venta-" + ventaId + " #contrato").textContent;
+                                  var contratoSelect = document.getElementById("contratoSelect");
+                                  contratoSelect.value = contratoValue;
+                              } else {
+                                  var divDefault = document.getElementById("venta-default");
+                                  var botonE = document.getElementById("editar");
+                                  divDefault.style.display = "block";
+                                  botonE.style.display = "none";
+                              }
+                          }
+                          window.onload = function() {
+                              mostrarVenta();
+                          }
+                      </script>
+                      
+                </div>
+            </div>                  
+        </div>            
+    </div>
+    
+  </header>
+    <footer th:replace="plantilla/template::footer"></footer>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</html>
